@@ -59,7 +59,7 @@ impl RawConnection {
         }
     }
 
-    pub unsafe fn exec(&self, query: *const libc::c_char) -> QueryResult<RawResult> {
+    pub unsafe fn exec(&self, query: *const libc::c_char) -> QueryResult {
         RawResult::new(PQexec(self.internal_connection.as_ptr(), query), self)
     }
 
@@ -71,7 +71,7 @@ impl RawConnection {
         param_lengths: *const libc::c_int,
         param_formats: *const libc::c_int,
         result_format: libc::c_int,
-    ) -> QueryResult<RawResult> {
+    ) -> QueryResult {
         let ptr = PQexecPrepared(
             self.internal_connection.as_ptr(),
             stmt_name,
@@ -90,7 +90,7 @@ impl RawConnection {
         query: *const libc::c_char,
         param_count: libc::c_int,
         param_types: *const Oid,
-    ) -> QueryResult<RawResult> {
+    ) -> QueryResult {
         let ptr = PQprepare(
             self.internal_connection.as_ptr(),
             stmt_name,
@@ -131,7 +131,7 @@ unsafe impl Sync for RawResult {}
 
 impl RawResult {
     #[allow(clippy::new_ret_no_self)]
-    fn new(ptr: *mut PGresult, conn: &RawConnection) -> QueryResult<Self> {
+    fn new(ptr: *mut PGresult, conn: &RawConnection) -> QueryResult {
         NonNull::new(ptr).map(RawResult).ok_or_else(|| {
             Error::DatabaseError(
                 DatabaseErrorKind::UnableToSendCommand,

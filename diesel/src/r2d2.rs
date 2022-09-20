@@ -101,7 +101,7 @@ impl<T> SimpleConnection for PooledConnection<ConnectionManager<T>>
 where
     T: Connection + Send + 'static,
 {
-    fn batch_execute(&self, query: &str) -> QueryResult<()> {
+    fn batch_execute(&self, query: &str) -> QueryResult {
         (&**self).batch_execute(query)
     }
 }
@@ -120,11 +120,11 @@ where
         )))
     }
 
-    fn execute(&self, query: &str) -> QueryResult<usize> {
+    fn execute(&self, query: &str) -> QueryResult {
         (&**self).execute(query)
     }
 
-    fn query_by_index<T, U>(&self, source: T) -> QueryResult<Vec<U>>
+    fn query_by_index<T, U>(&self, source: T) -> QueryResult
     where
         T: AsQuery,
         T::Query: QueryFragment + QueryId,
@@ -134,7 +134,7 @@ where
         (&**self).query_by_index(source)
     }
 
-    fn query_by_name<T, U>(&self, source: &T) -> QueryResult<Vec<U>>
+    fn query_by_name<T, U>(&self, source: &T) -> QueryResult
     where
         T: QueryFragment + QueryId,
         U: QueryableByName<Self::Backend>,
@@ -142,7 +142,7 @@ where
         (&**self).query_by_name(source)
     }
 
-    fn execute_returning_count<T>(&self, source: &T) -> QueryResult<usize>
+    fn execute_returning_count<T>(&self, source: &T) -> QueryResult
     where
         T: QueryFragment + QueryId,
     {

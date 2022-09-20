@@ -25,7 +25,7 @@ impl<'a, ST, T> Iterator for StatementIterator<'a, ST, T>
 where
     T: Queryable<ST, Sqlite>,
 {
-    type Item = QueryResult<T>;
+    type Item = QueryResult;
 
     fn next(&mut self) -> Option<Self::Item> {
         let row = match self.stmt.step() {
@@ -53,7 +53,7 @@ pub struct NamedStatementIterator<'a, T> {
 
 impl<'a, T> NamedStatementIterator<'a, T> {
     #[allow(clippy::new_ret_no_self)]
-    pub fn new(stmt: StatementUse<'a>) -> QueryResult<Self> {
+    pub fn new(stmt: StatementUse<'a>) -> QueryResult {
         Ok(NamedStatementIterator {
             stmt,
             column_indices: None,
@@ -61,7 +61,7 @@ impl<'a, T> NamedStatementIterator<'a, T> {
         })
     }
 
-    fn populate_column_indices(&mut self) -> QueryResult<()> {
+    fn populate_column_indices(&mut self) -> QueryResult {
         let column_indices = (0..self.stmt.num_fields())
             .filter_map(|i| {
                 self.stmt.field_name(i).map(|column| {
@@ -71,7 +71,7 @@ impl<'a, T> NamedStatementIterator<'a, T> {
                     Ok((column, i))
                 })
             })
-            .collect::<QueryResult<_>>()?;
+            .collect::<QueryResult>()?;
 
         self.column_indices = Some(column_indices);
         Ok(())
@@ -82,7 +82,7 @@ impl<'a, T> Iterator for NamedStatementIterator<'a, T>
 where
     T: QueryableByName<Sqlite>,
 {
-    type Item = QueryResult<T>;
+    type Item = QueryResult;
 
     fn next(&mut self) -> Option<Self::Item> {
         let row = match self.stmt.step() {

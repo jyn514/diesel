@@ -49,7 +49,7 @@ macro_rules! sql_function_body {
         //     DB: $crate::backend::Backend,
         //     for <'a> ($(&'a $arg_name),*): $crate::query_builder::QueryFragment,
         // {
-        //     fn walk_ast(&self, mut out: $crate::query_builder::AstPass) -> $crate::result::QueryResult<()> {
+        //     fn walk_ast(&self, mut out: $crate::query_builder::AstPass) -> $crate::result::QueryResult {
         //         out.push_sql(concat!(stringify!($fn_name), "("));
         //         $crate::query_builder::QueryFragment::walk_ast(
         //             &($(&self.$arg_name),*), out.reborrow())?;
@@ -245,7 +245,7 @@ macro_rules! __diesel_sql_function_body {
                 DB: $crate::backend::Backend,
                 for<'a> ($(&'a $arg_name),*): $crate::query_builder::QueryFragment,
             {
-                fn walk_ast(&self, mut out: $crate::query_builder::AstPass) -> $crate::result::QueryResult<()> {
+                fn walk_ast(&self, mut out: $crate::query_builder::AstPass) -> $crate::result::QueryResult {
                     out.push_sql(concat!($sql_name, "("));
                     $crate::query_builder::QueryFragment::walk_ast(
                         &($(&self.$arg_name),*), out.reborrow())?;
@@ -335,7 +335,7 @@ macro_rules! __diesel_sqlite_register_fn {
         pub fn register_impl<F, Ret, $($args,)+>(
             conn: &$crate::SqliteConnection,
             f: F,
-        ) -> $crate::QueryResult<()>
+        ) -> $crate::QueryResult
         where
             F: Fn($($args,)+) -> Ret + Send + 'static,
             ($($args,)+): $crate::deserialize::Queryable<$sql_args, $crate::sqlite::Sqlite>,
@@ -360,7 +360,7 @@ macro_rules! __diesel_sqlite_register_fn {
         pub fn register_nondeterministic_impl<F, Ret, $($args,)+>(
             conn: &$crate::SqliteConnection,
             mut f: F,
-        ) -> $crate::QueryResult<()>
+        ) -> $crate::QueryResult
         where
             F: FnMut($($args,)+) -> Ret + Send + 'static,
             ($($args,)+): $crate::deserialize::Queryable<$sql_args, $crate::sqlite::Sqlite>,
@@ -624,7 +624,7 @@ macro_rules! no_arg_sql_function_body {
         // impl<DB> $crate::query_builder::QueryFragment for $type_name where
         //     DB: $crate::backend::Backend + $($constraint)::+,
         // {
-        //     fn walk_ast(&self, mut out: $crate::query_builder::AstPass) -> $crate::result::QueryResult<()> {
+        //     fn walk_ast(&self, mut out: $crate::query_builder::AstPass) -> $crate::result::QueryResult {
         //         out.push_sql(concat!(stringify!($type_name), "()"));
         //         Ok(())
         //     }
@@ -637,7 +637,7 @@ macro_rules! no_arg_sql_function_body {
         impl<DB> $crate::query_builder::QueryFragment for $type_name where
             DB: $crate::backend::Backend,
         {
-            fn walk_ast(&self, mut out: $crate::query_builder::AstPass) -> $crate::result::QueryResult<()> {
+            fn walk_ast(&self, mut out: $crate::query_builder::AstPass) -> $crate::result::QueryResult {
                 out.push_sql(concat!(stringify!($type_name), "()"));
                 Ok(())
             }

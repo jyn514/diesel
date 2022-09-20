@@ -41,7 +41,7 @@ where
     Ts: QueryFragment,
     Tz: QueryFragment,
 {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         self.timestamp.walk_ast(out.reborrow())?;
         out.push_sql(" AT TIME ZONE ");
         self.timezone.walk_ast(out.reborrow())?;

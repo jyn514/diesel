@@ -102,7 +102,7 @@ pub fn update<T: IntoUpdateTarget>(source: T) -> UpdateStatement<T::Table, T::Wh
 /// #     delete();
 /// # }
 /// #
-/// # fn delete() -> QueryResult<()> {
+/// # fn delete() -> QueryResult {
 /// #     use schema::users::dsl::*;
 /// #     let connection = establish_connection();
 /// #     let get_count = || users.count().first::<i64>(&connection);
@@ -123,7 +123,7 @@ pub fn update<T: IntoUpdateTarget>(source: T) -> UpdateStatement<T::Table, T::Wh
 /// #     delete();
 /// # }
 /// #
-/// # fn delete() -> QueryResult<()> {
+/// # fn delete() -> QueryResult {
 /// #     use schema::users::dsl::*;
 /// #     let connection = establish_connection();
 /// #     let get_count = || users.count().first::<i64>(&connection);
@@ -266,7 +266,7 @@ pub fn delete<T: IntoUpdateTarget>(source: T) -> DeleteStatement<T::Table, T::Wh
 /// #     run_test().unwrap();
 /// # }
 /// #
-/// # fn run_test() -> QueryResult<()> {
+/// # fn run_test() -> QueryResult {
 /// #     use schema::{posts, users};
 /// #     let conn = establish_connection();
 /// #     diesel::delete(posts::table).execute(&conn)?;
@@ -336,7 +336,7 @@ pub fn insert_into<T>(target: T) -> IncompleteInsertStatement<T, Insert> {
 /// # }
 /// #
 /// # #[cfg(not(feature = "postgres"))]
-/// # fn run_test() -> QueryResult<()> {
+/// # fn run_test() -> QueryResult {
 /// #     use schema::users::dsl::*;
 /// #     use diesel::{delete, insert_or_ignore_into};
 /// #
@@ -359,7 +359,7 @@ pub fn insert_into<T>(target: T) -> IncompleteInsertStatement<T, Insert> {
 /// # }
 /// #
 /// # #[cfg(feature = "postgres")]
-/// # fn run_test() -> QueryResult<()> {
+/// # fn run_test() -> QueryResult {
 /// #     Ok(())
 /// # }
 /// ```

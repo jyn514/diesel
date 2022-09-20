@@ -23,7 +23,7 @@ pub trait SimpleConnection {
     ///
     /// This function is used to execute migrations,
     /// which may contain more than one SQL statement.
-    fn batch_execute(&self, query: &str) -> QueryResult<()>;
+    fn batch_execute(&self, query: &str) -> QueryResult;
 }
 
 /// A connection to a database
@@ -60,7 +60,7 @@ pub trait Connection: SimpleConnection + Sized + Send {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::users::dsl::*;
     /// #     let conn = establish_connection();
     /// conn.transaction::<_, Error, _>(|| {
@@ -113,7 +113,7 @@ pub trait Connection: SimpleConnection + Sized + Send {
 
     /// Creates a transaction that will never be committed. This is useful for
     /// tests. Panics if called while inside of a transaction.
-    fn begin_test_transaction(&self) -> QueryResult<()> {
+    fn begin_test_transaction(&self) -> QueryResult {
         let transaction_manager = self.transaction_manager();
         assert_eq!(transaction_manager.get_transaction_depth(), 0);
         transaction_manager.begin_transaction(self)
@@ -133,7 +133,7 @@ pub trait Connection: SimpleConnection + Sized + Send {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::users::dsl::*;
     /// #     let conn = establish_connection();
     /// conn.test_transaction::<_, Error, _>(|| {
@@ -167,10 +167,10 @@ pub trait Connection: SimpleConnection + Sized + Send {
     }
 
     #[doc(hidden)]
-    fn execute(&self, query: &str) -> QueryResult<usize>;
+    fn execute(&self, query: &str) -> QueryResult;
 
     #[doc(hidden)]
-    fn query_by_index<T, U>(&self, source: T) -> QueryResult<Vec<U>>
+    fn query_by_index<T, U>(&self, source: T) -> QueryResult
     where
         T: AsQuery,
         T::Query: QueryFragment + QueryId,
@@ -178,13 +178,13 @@ pub trait Connection: SimpleConnection + Sized + Send {
         U: Queryable<T::SqlType, Self::Backend>;
 
     #[doc(hidden)]
-    fn query_by_name<T, U>(&self, source: &T) -> QueryResult<Vec<U>>
+    fn query_by_name<T, U>(&self, source: &T) -> QueryResult
     where
         T: QueryFragment + QueryId,
         U: QueryableByName<Self::Backend>;
 
     #[doc(hidden)]
-    fn execute_returning_count<T>(&self, source: &T) -> QueryResult<usize>
+    fn execute_returning_count<T>(&self, source: &T) -> QueryResult
     where
         T: QueryFragment + QueryId;
 

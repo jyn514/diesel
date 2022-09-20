@@ -112,7 +112,7 @@ where
     Right::FromClause: QueryFragment,
     Kind: QueryFragment,
 {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         self.left.from_clause().walk_ast(out.reborrow())?;
         self.kind.walk_ast(out.reborrow())?;
         out.push_sql(" JOIN ");
@@ -219,7 +219,7 @@ where
 pub struct Inner;
 
 impl<DB: Backend> QueryFragment for Inner {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         out.push_sql(" INNER");
         Ok(())
     }
@@ -230,7 +230,7 @@ impl<DB: Backend> QueryFragment for Inner {
 pub struct LeftOuter;
 
 impl<DB: Backend> QueryFragment for LeftOuter {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         out.push_sql(" LEFT OUTER");
         Ok(())
     }

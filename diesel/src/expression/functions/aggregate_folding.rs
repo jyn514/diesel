@@ -45,7 +45,7 @@ sql_function! {
     /// # }
     /// #
     /// # #[cfg(all(feature = "numeric", any(feature = "postgres", not(feature = "sqlite"))))]
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use bigdecimal::BigDecimal;
     /// #     use numbers::dsl::*;
     /// #     let conn = establish_connection();
@@ -61,7 +61,7 @@ sql_function! {
     /// # }
     /// #
     /// # #[cfg(not(all(feature = "numeric", any(feature = "postgres", not(feature = "sqlite")))))]
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     Ok(())
     /// # }
     #[aggregate]

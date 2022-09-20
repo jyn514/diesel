@@ -34,7 +34,7 @@ pub struct PgConnection {
 unsafe impl Send for PgConnection {}
 
 impl SimpleConnection for PgConnection {
-    fn batch_execute(&self, query: &str) -> QueryResult<()> {
+    fn batch_execute(&self, query: &str) -> QueryResult {
         let query = CString::new(query)?;
         let inner_result = unsafe { self.raw_connection.exec(query.as_ptr()) };
         PgResult::new(inner_result?)?;
@@ -60,12 +60,12 @@ impl Connection for PgConnection {
     }
 
     #[doc(hidden)]
-    fn execute(&self, query: &str) -> QueryResult<usize> {
+    fn execute(&self, query: &str) -> QueryResult {
         self.execute_inner(query).map(|res| res.rows_affected())
     }
 
     #[doc(hidden)]
-    fn query_by_index<T, U>(&self, source: T) -> QueryResult<Vec<U>>
+    fn query_by_index<T, U>(&self, source: T) -> QueryResult
     where
         T: AsQuery,
         T::Query: QueryFragment + QueryId,
@@ -79,7 +79,7 @@ impl Connection for PgConnection {
     }
 
     #[doc(hidden)]
-    fn query_by_name<T, U>(&self, source: &T) -> QueryResult<Vec<U>>
+    fn query_by_name<T, U>(&self, source: &T) -> QueryResult
     where
         T: QueryFragment + QueryId,
         U: QueryableByName<Pg>,
@@ -91,7 +91,7 @@ impl Connection for PgConnection {
     }
 
     #[doc(hidden)]
-    fn execute_returning_count<T>(&self, source: &T) -> QueryResult<usize>
+    fn execute_returning_count<T>(&self, source: &T) -> QueryResult
     where
         T: QueryFragment + QueryId,
     {
@@ -122,7 +122,7 @@ impl PgConnection {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::users::dsl::*;
     /// #     let conn = connection_no_transaction();
     /// conn.build_transaction()
@@ -140,7 +140,7 @@ impl PgConnection {
     fn prepare_query<T: QueryFragment + QueryId>(
         &self,
         source: &T,
-    ) -> QueryResult<(MaybeCached<Statement>, Vec<Option<Vec<u8>>>)> {
+    ) -> QueryResult, Vec<Option<Vec<u8>>>)> {
         let mut bind_collector = RawBytesBindCollector::<Pg>::new();
         source.collect_binds(&mut bind_collector, PgMetadataLookup::new(self))?;
         let binds = bind_collector.binds;
@@ -166,12 +166,12 @@ impl PgConnection {
         Ok((query?, binds))
     }
 
-    fn execute_inner(&self, query: &str) -> QueryResult<PgResult> {
+    fn execute_inner(&self, query: &str) -> QueryResult {
         let query = Statement::prepare(&self.raw_connection, query, None, &[])?;
         query.execute(&self.raw_connection, &Vec::new())
     }
 
-    fn set_config_options(&self) -> QueryResult<()> {
+    fn set_config_options(&self) -> QueryResult {
         self.execute("SET TIME ZONE 'UTC'")?;
         self.execute("SET CLIENT_ENCODING TO 'UTF8'")?;
         self.raw_connection

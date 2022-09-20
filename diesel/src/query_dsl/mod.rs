@@ -93,7 +93,7 @@ pub trait QueryDsl: Sized {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::users::dsl::*;
     /// #     let connection = establish_connection();
     /// #     connection.execute("DELETE FROM users").unwrap();
@@ -200,7 +200,7 @@ pub trait QueryDsl: Sized {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use self::users::dsl::*;
     /// #     let connection = establish_connection();
     /// // By default, all columns will be selected
@@ -256,7 +256,7 @@ pub trait QueryDsl: Sized {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     let connection = establish_connection();
     /// #     connection.execute("DELETE FROM posts")?;
     /// #     diesel::insert_into(posts::table)
@@ -502,7 +502,7 @@ pub trait QueryDsl: Sized {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::animals::dsl::*;
     /// #     let connection = establish_connection();
     /// #     diesel::delete(animals).execute(&connection)?;
@@ -583,7 +583,7 @@ pub trait QueryDsl: Sized {
     /// #     run_test();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::users::dsl::*;
     /// #     let connection = establish_connection();
     /// #     connection.execute("DELETE FROM users")?;
@@ -651,7 +651,7 @@ pub trait QueryDsl: Sized {
     /// #     run_test();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::users::dsl::*;
     /// #     let connection = establish_connection();
     /// #     connection.execute("DELETE FROM users")?;
@@ -700,7 +700,7 @@ pub trait QueryDsl: Sized {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use users::dsl::*;
     /// #     let connection = establish_connection();
     /// #     diesel::delete(users).execute(&connection)?;
@@ -750,7 +750,7 @@ pub trait QueryDsl: Sized {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use users::dsl::*;
     /// #     let connection = establish_connection();
     /// #     diesel::delete(users).execute(&connection)?;
@@ -1024,7 +1024,7 @@ pub trait QueryDsl: Sized {
     /// #     run_test();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use diesel::insert_into;
     /// #     use schema::users::dsl::*;
     /// #     use schema::posts;
@@ -1060,7 +1060,7 @@ pub trait QueryDsl: Sized {
     /// #    run_test();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     let connection = establish_connection();
     /// table! {
     ///     users {
@@ -1113,7 +1113,7 @@ pub trait RunQueryDsl<Conn>: Sized {
     /// #     run_test();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use diesel::insert_into;
     /// #     use schema::users::dsl::*;
     /// #     let connection = establish_connection();
@@ -1129,7 +1129,7 @@ pub trait RunQueryDsl<Conn>: Sized {
     /// #     Ok(())
     /// # }
     /// ```
-    fn execute(self, conn: &Conn) -> QueryResult<usize>
+    fn execute(self, conn: &Conn) -> QueryResult
     where
         Conn: Connection,
         Self: methods::ExecuteDsl<Conn>,
@@ -1167,7 +1167,7 @@ pub trait RunQueryDsl<Conn>: Sized {
     /// #     run_test();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use diesel::insert_into;
     /// #     use schema::users::dsl::*;
     /// #     let connection = establish_connection();
@@ -1188,7 +1188,7 @@ pub trait RunQueryDsl<Conn>: Sized {
     /// #     run_test();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use diesel::insert_into;
     /// #     use schema::users::dsl::*;
     /// #     let connection = establish_connection();
@@ -1219,7 +1219,7 @@ pub trait RunQueryDsl<Conn>: Sized {
     /// #     run_test();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use diesel::insert_into;
     /// #     use schema::users::dsl::*;
     /// #     let connection = establish_connection();
@@ -1233,7 +1233,7 @@ pub trait RunQueryDsl<Conn>: Sized {
     /// #     Ok(())
     /// # }
     /// ```
-    fn load<U>(self, conn: &Conn) -> QueryResult<Vec<U>>
+    fn load<U>(self, conn: &Conn) -> QueryResult
     where
         Self: LoadQuery<Conn, U>,
     {
@@ -1261,7 +1261,7 @@ pub trait RunQueryDsl<Conn>: Sized {
     /// # }
     /// #
     /// # #[cfg(feature = "postgres")]
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use diesel::{insert_into, update};
     /// #     use schema::users::dsl::*;
     /// #     let connection = establish_connection();
@@ -1279,11 +1279,11 @@ pub trait RunQueryDsl<Conn>: Sized {
     /// # }
     /// #
     /// # #[cfg(not(feature = "postgres"))]
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     Ok(())
     /// # }
     /// ```
-    fn get_result<U>(self, conn: &Conn) -> QueryResult<U>
+    fn get_result<U>(self, conn: &Conn) -> QueryResult
     where
         Self: LoadQuery<Conn, U>,
     {
@@ -1296,7 +1296,7 @@ pub trait RunQueryDsl<Conn>: Sized {
     /// sense for insert, update, and delete statements.
     ///
     /// [`load`]: #method.load
-    fn get_results<U>(self, conn: &Conn) -> QueryResult<Vec<U>>
+    fn get_results<U>(self, conn: &Conn) -> QueryResult
     where
         Self: LoadQuery<Conn, U>,
     {
@@ -1320,7 +1320,7 @@ pub trait RunQueryDsl<Conn>: Sized {
     /// #     run_test();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::users::dsl::*;
     /// #     let connection = establish_connection();
     /// diesel::insert_into(users)
@@ -1337,7 +1337,7 @@ pub trait RunQueryDsl<Conn>: Sized {
     /// #     Ok(())
     /// # }
     /// ```
-    fn first<U>(self, conn: &Conn) -> QueryResult<U>
+    fn first<U>(self, conn: &Conn) -> QueryResult
     where
         Self: methods::LimitDsl,
         Limit<Self>: LoadQuery<Conn, U>,

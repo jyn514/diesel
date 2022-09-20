@@ -12,7 +12,7 @@ macro_rules! simple_clause {
         pub struct $no_clause;
 
         // impl<DB: Backend> QueryFragment for $no_clause {
-        //     fn walk_ast(&self, _: AstPass) -> QueryResult<()> {
+        //     fn walk_ast(&self, _: AstPass) -> QueryResult {
         //         Ok(())
         //     }
         // }
@@ -24,7 +24,7 @@ macro_rules! simple_clause {
         //     DB: Backend $(+ $backend_bounds)*,
         //     Expr: QueryFragment,
         // {
-        //     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+        //     fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         //         out.push_sql($sql);
         //         self.0.walk_ast(out.reborrow())?;
         //         Ok(())

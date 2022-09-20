@@ -23,7 +23,7 @@ macro_rules! __diesel_column {
             DB: $crate::backend::Backend,
             <$table as QuerySource>::FromClause: QueryFragment,
         {
-            fn walk_ast(&self, mut out: $crate::query_builder::AstPass) -> $crate::result::QueryResult<()> {
+            fn walk_ast(&self, mut out: $crate::query_builder::AstPass) -> $crate::result::QueryResult {
                 $table.from_clause().walk_ast(out.reborrow())?;
                 out.push_sql(".");
                 out.push_identifier($sql_name)
@@ -807,7 +807,7 @@ macro_rules! __diesel_table_impl {
                 // impl<DB: Backend> QueryFragment for star where
                 //     <table as QuerySource>::FromClause: QueryFragment,
                 // {
-                //     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+                //     fn walk_ast(&self, mut out: AstPass) -> QueryResult {
                 //         table.from_clause().walk_ast(out.reborrow())?;
                 //         out.push_sql(".*");
                 //         Ok(())

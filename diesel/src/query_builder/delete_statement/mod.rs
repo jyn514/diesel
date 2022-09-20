@@ -95,7 +95,7 @@ impl<T, U> DeleteStatement<T, U, NoReturningClause> {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use std::collections::HashMap;
     /// #     use schema::users::dsl::*;
     /// #     let connection = establish_connection();
@@ -166,7 +166,7 @@ where
     U: QueryFragment,
     Ret: QueryFragment,
 {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         out.push_sql("DELETE FROM ");
         self.table.from_clause().walk_ast(out.reborrow())?;
         self.where_clause.walk_ast(out.reborrow())?;

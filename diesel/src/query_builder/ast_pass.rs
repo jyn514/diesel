@@ -156,7 +156,7 @@ pub use crate::insertable::AstPass;
 //     ///     Left: QueryFragment,
 //     ///     Right: QueryFragment,
 //     /// {
-//     ///     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+//     ///     fn walk_ast(&self, mut out: AstPass) -> QueryResult {
 //     ///         self.left.walk_ast(out.reborrow())?;
 //     ///         out.push_sql(" AND ");
 //     ///         self.right.walk_ast(out.reborrow())?;
@@ -177,7 +177,7 @@ pub use crate::insertable::AstPass;
 //     ///
 //     /// The identifier will be quoted using the rules specific to the backend
 //     /// the query is being constructed for.
-//     pub fn push_identifier(&mut self, identifier: &str) -> QueryResult<()> {
+//     pub fn push_identifier(&mut self, identifier: &str) -> QueryResult {
 //         match self.internals {
 //             AstPassInternals::ToSql(ref mut builder) => builder.push_identifier(identifier)?,
 //             AstPassInternals::IsNoop(ref mut result) => **result = false,
@@ -191,7 +191,7 @@ pub use crate::insertable::AstPass;
 //     /// This method affects multiple AST passes. It should be called at the
 //     /// point in the query where you'd want the parameter placeholder (`$1` on
 //     /// PG, `?` on other backends) to be inserted.
-//     pub fn push_bind_param<T, U>(&mut self, bind: &U) -> QueryResult<()>
+//     pub fn push_bind_param<T, U>(&mut self, bind: &U) -> QueryResult
 //     where
 //         DB: HasSqlType<T>,
 //         U: ToSql<T, DB>,
@@ -213,7 +213,7 @@ pub use crate::insertable::AstPass;
 //     }
 
 //     #[doc(hidden)]
-//     pub fn push_bind_param_value_only<T, U>(&mut self, bind: &U) -> QueryResult<()>
+//     pub fn push_bind_param_value_only<T, U>(&mut self, bind: &U) -> QueryResult
 //     where
 //         DB: HasSqlType<T>,
 //         U: ToSql<T, DB>,

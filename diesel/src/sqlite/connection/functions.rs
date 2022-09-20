@@ -14,7 +14,7 @@ pub fn register<ArgsSqlType, RetSqlType, Args, Ret, F>(
     fn_name: &str,
     deterministic: bool,
     mut f: F,
-) -> QueryResult<()>
+) -> QueryResult
 where
     F: FnMut(&RawConnection, Args) -> Ret + Send + 'static,
     Args: Queryable<ArgsSqlType, Sqlite>,

@@ -78,7 +78,7 @@ impl RawConnection {
             .into_owned()
     }
 
-    pub fn execute(&self, query: &str) -> QueryResult<()> {
+    pub fn execute(&self, query: &str) -> QueryResult {
         unsafe {
             // Make sure you don't use the fake one!
             ffi::mysql_real_query(
@@ -92,9 +92,9 @@ impl RawConnection {
         Ok(())
     }
 
-    pub fn enable_multi_statements<T, F>(&self, f: F) -> QueryResult<T>
+    pub fn enable_multi_statements<T, F>(&self, f: F) -> QueryResult
     where
-        F: FnOnce() -> QueryResult<T>,
+        F: FnOnce() -> QueryResult,
     {
         unsafe {
             ffi::mysql_set_server_option(
@@ -122,7 +122,7 @@ impl RawConnection {
         affected_rows as usize
     }
 
-    pub fn prepare(&self, query: &str) -> QueryResult<Statement> {
+    pub fn prepare(&self, query: &str) -> QueryResult {
         let stmt = unsafe { ffi::mysql_stmt_init(self.0.as_ptr()) };
         // It is documented that the only reason `mysql_stmt_init` will fail
         // is because of OOM.
@@ -133,7 +133,7 @@ impl RawConnection {
         Ok(stmt)
     }
 
-    fn did_an_error_occur(&self) -> QueryResult<()> {
+    fn did_an_error_occur(&self) -> QueryResult {
         use result::DatabaseErrorKind;
         use result::Error::DatabaseError;
 
@@ -148,7 +148,7 @@ impl RawConnection {
         }
     }
 
-    fn flush_pending_results(&self) -> QueryResult<()> {
+    fn flush_pending_results(&self) -> QueryResult {
         // We may have a result to process before advancing
         self.consume_current_result()?;
         while self.more_results() {
@@ -158,7 +158,7 @@ impl RawConnection {
         Ok(())
     }
 
-    fn consume_current_result(&self) -> QueryResult<()> {
+    fn consume_current_result(&self) -> QueryResult {
         unsafe {
             let res = ffi::mysql_store_result(self.0.as_ptr());
             if !res.is_null() {
@@ -172,7 +172,7 @@ impl RawConnection {
         unsafe { ffi::mysql_more_results(self.0.as_ptr()) != 0 }
     }
 
-    fn next_result(&self) -> QueryResult<()> {
+    fn next_result(&self) -> QueryResult {
         unsafe { ffi::mysql_next_result(self.0.as_ptr()) };
         self.did_an_error_occur()
     }

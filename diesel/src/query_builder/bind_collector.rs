@@ -19,7 +19,7 @@ pub trait BindCollector<DB: Backend> {
         &mut self,
         bind: &U,
         metadata_lookup: &DB::MetadataLookup,
-    ) -> QueryResult<()>
+    ) -> QueryResult
     where
         DB: HasSqlType<T>,
         U: ToSql<T, DB>;
@@ -58,7 +58,7 @@ impl<DB: Backend + TypeMetadata> BindCollector<DB> for RawBytesBindCollector<DB>
         &mut self,
         bind: &U,
         metadata_lookup: &DB::MetadataLookup,
-    ) -> QueryResult<()>
+    ) -> QueryResult
     where
         DB: HasSqlType<T>,
         U: ToSql<T, DB>,

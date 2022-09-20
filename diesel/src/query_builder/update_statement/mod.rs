@@ -127,7 +127,7 @@ impl<T, U, V, Ret> UpdateStatement<T, U, V, Ret> {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use std::collections::HashMap;
     /// #     use schema::users::dsl::*;
     /// #     let connection = establish_connection();
@@ -202,7 +202,7 @@ where
     V: QueryFragment,
     Ret: QueryFragment,
 {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         if self.values.is_noop()? {
             return Err(QueryBuilderError(
                 "There are no changes to save. This query cannot be built".into(),

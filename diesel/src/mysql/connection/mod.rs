@@ -26,7 +26,7 @@ pub struct MysqlConnection {
 unsafe impl Send for MysqlConnection {}
 
 impl SimpleConnection for MysqlConnection {
-    fn batch_execute(&self, query: &str) -> QueryResult<()> {
+    fn batch_execute(&self, query: &str) -> QueryResult {
         self.raw_connection
             .enable_multi_statements(|| self.raw_connection.execute(query))
     }
@@ -53,14 +53,14 @@ impl Connection for MysqlConnection {
     }
 
     #[doc(hidden)]
-    fn execute(&self, query: &str) -> QueryResult<usize> {
+    fn execute(&self, query: &str) -> QueryResult {
         self.raw_connection
             .execute(query)
             .map(|_| self.raw_connection.affected_rows())
     }
 
     #[doc(hidden)]
-    fn query_by_index<T, U>(&self, source: T) -> QueryResult<Vec<U>>
+    fn query_by_index<T, U>(&self, source: T) -> QueryResult
     where
         T: AsQuery,
         T::Query: QueryFragment + QueryId,
@@ -82,7 +82,7 @@ impl Connection for MysqlConnection {
     }
 
     #[doc(hidden)]
-    fn query_by_name<T, U>(&self, source: &T) -> QueryResult<Vec<U>>
+    fn query_by_name<T, U>(&self, source: &T) -> QueryResult
     where
         T: QueryFragment + QueryId,
         U: QueryableByName<Self::Backend>,
@@ -95,7 +95,7 @@ impl Connection for MysqlConnection {
     }
 
     #[doc(hidden)]
-    fn execute_returning_count<T>(&self, source: &T) -> QueryResult<usize>
+    fn execute_returning_count<T>(&self, source: &T) -> QueryResult
     where
         T: QueryFragment + QueryId,
     {
@@ -113,7 +113,7 @@ impl Connection for MysqlConnection {
 }
 
 impl MysqlConnection {
-    fn prepare_query<T>(&self, source: &T) -> QueryResult<MaybeCached<Statement>>
+    fn prepare_query<T>(&self, source: &T) -> QueryResult
     where
         T: QueryFragment + QueryId,
     {
@@ -126,7 +126,7 @@ impl MysqlConnection {
         Ok(stmt)
     }
 
-    fn set_config_options(&self) -> QueryResult<()> {
+    fn set_config_options(&self) -> QueryResult {
         self.execute("SET sql_mode=(SELECT CONCAT(@@sql_mode, ',PIPES_AS_CONCAT'))")?;
         self.execute("SET time_zone = '+00:00';")?;
         self.execute("SET character_set_client = 'utf8mb4'")?;

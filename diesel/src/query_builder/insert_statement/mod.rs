@@ -60,7 +60,7 @@ impl<T, Op> IncompleteInsertStatement<T, Op> {
     /// #     run_test();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use diesel::insert_into;
     /// #     use users::dsl::*;
     /// #     let connection = connection_no_data();
@@ -182,7 +182,7 @@ impl<T, U, C, Op, Ret> InsertStatement<T, InsertFromSelect<U, C>, Op, Ret> {
 //     Op: QueryFragment,
 //     Ret: QueryFragment,
 // {
-//     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+//     fn walk_ast(&self, mut out: AstPass) -> QueryResult {
 //         out.unsafe_to_cache_prepared();
 
 //         if self.records.rows_to_insert() == Some(0) {
@@ -210,7 +210,7 @@ where
     T: Copy,
     Op: Copy,
 {
-    fn execute(query: Self, conn: &SqliteConnection) -> QueryResult<usize> {
+    fn execute(query: Self, conn: &SqliteConnection) -> QueryResult {
         use connection::Connection;
         conn.transaction(|| {
             let mut result = 0;
@@ -233,7 +233,7 @@ where
 // where
 //     InsertStatement<T, &'a [U], Op>: ExecuteDsl<SqliteConnection>,
 // {
-//     fn execute(query: Self, conn: &SqliteConnection) -> QueryResult<usize> {
+//     fn execute(query: Self, conn: &SqliteConnection) -> QueryResult {
 //         InsertStatement::new(
 //             query.target,
 //             query.records.records,
@@ -252,7 +252,7 @@ where
 //     T: Copy,
 //     Op: Copy,
 // {
-//     fn execute(query: Self, conn: &SqliteConnection) -> QueryResult<usize> {
+//     fn execute(query: Self, conn: &SqliteConnection) -> QueryResult {
 //         use connection::Connection;
 //         conn.transaction(|| {
 //             let mut result = 0;
@@ -335,7 +335,7 @@ impl<T, U, Op> InsertStatement<T, U, Op> {
 pub struct Insert;
 
 // impl<DB: Backend> QueryFragment for Insert {
-//     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+//     fn walk_ast(&self, mut out: AstPass) -> QueryResult {
 //         out.push_sql("INSERT");
 //         Ok(())
 //     }
@@ -347,7 +347,7 @@ pub struct InsertOrIgnore;
 
 #[cfg(feature = "sqlite")]
 impl QueryFragment for InsertOrIgnore {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         out.push_sql("INSERT OR IGNORE");
         Ok(())
     }
@@ -355,7 +355,7 @@ impl QueryFragment for InsertOrIgnore {
 
 #[cfg(feature = "mysql")]
 impl QueryFragment for InsertOrIgnore {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         out.push_sql("INSERT IGNORE");
         Ok(())
     }
@@ -367,7 +367,7 @@ pub struct Replace;
 
 #[cfg(feature = "sqlite")]
 impl QueryFragment for Replace {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         out.push_sql("REPLACE");
         Ok(())
     }
@@ -375,7 +375,7 @@ impl QueryFragment for Replace {
 
 #[cfg(feature = "mysql")]
 impl QueryFragment for Replace {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         out.push_sql("REPLACE");
         Ok(())
     }
@@ -445,7 +445,7 @@ impl<'a, Tab> Insertable<Tab> for &'a DefaultValues {
 //     DB: Backend + Any,
 // {
 //     #[cfg(feature = "mysql")]
-//     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+//     fn walk_ast(&self, mut out: AstPass) -> QueryResult {
 //         // This can be less hacky once stabilization lands
 //         if TypeId::of::<DB>() == TypeId::of::<::mysql::Mysql>() {
 //             out.push_sql("() VALUES ()");
@@ -456,7 +456,7 @@ impl<'a, Tab> Insertable<Tab> for &'a DefaultValues {
 //     }
 
 //     #[cfg(not(feature = "mysql"))]
-//     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+//     fn walk_ast(&self, mut out: AstPass) -> QueryResult {
 //         out.push_sql("DEFAULT VALUES");
 //         Ok(())
 //     }
@@ -514,7 +514,7 @@ where
 //     T: InsertValues<Tab, DB>,
 //     DefaultValues: QueryFragment,
 // {
-//     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+//     fn walk_ast(&self, mut out: AstPass) -> QueryResult {
 //         if self.values.is_noop()? {
 //             DefaultValues.walk_ast(out)?;
 //         } else {

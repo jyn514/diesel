@@ -15,7 +15,7 @@ pub struct PgResult {
 
 impl PgResult {
     #[allow(clippy::new_ret_no_self)]
-    pub fn new(internal_result: RawResult) -> QueryResult<Self> {
+    pub fn new(internal_result: RawResult) -> QueryResult {
         use self::ExecStatusType::*;
 
         let result_status = unsafe { PQresultStatus(internal_result.as_ptr()) };

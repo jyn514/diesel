@@ -40,7 +40,7 @@ pub struct SqliteConnection {
 unsafe impl Send for SqliteConnection {}
 
 impl SimpleConnection for SqliteConnection {
-    fn batch_execute(&self, query: &str) -> QueryResult<()> {
+    fn batch_execute(&self, query: &str) -> QueryResult {
         self.raw_connection.exec(query)
     }
 }
@@ -64,13 +64,13 @@ impl Connection for SqliteConnection {
     }
 
     #[doc(hidden)]
-    fn execute(&self, query: &str) -> QueryResult<usize> {
+    fn execute(&self, query: &str) -> QueryResult {
         self.batch_execute(query)?;
         Ok(self.raw_connection.rows_affected_by_last_query())
     }
 
     #[doc(hidden)]
-    fn query_by_index<T, U>(&self, source: T) -> QueryResult<Vec<U>>
+    fn query_by_index<T, U>(&self, source: T) -> QueryResult
     where
         T: AsQuery,
         T::Query: QueryFragment + QueryId,
@@ -84,7 +84,7 @@ impl Connection for SqliteConnection {
     }
 
     #[doc(hidden)]
-    fn query_by_name<T, U>(&self, source: &T) -> QueryResult<Vec<U>>
+    fn query_by_name<T, U>(&self, source: &T) -> QueryResult
     where
         T: QueryFragment + QueryId,
         U: QueryableByName<Self::Backend>,
@@ -96,7 +96,7 @@ impl Connection for SqliteConnection {
     }
 
     #[doc(hidden)]
-    fn execute_returning_count<T>(&self, source: &T) -> QueryResult<usize>
+    fn execute_returning_count<T>(&self, source: &T) -> QueryResult
     where
         T: QueryFragment + QueryId,
     {
@@ -127,7 +127,7 @@ impl SqliteConnection {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     let conn = SqliteConnection::establish(":memory:").unwrap();
     /// conn.immediate_transaction(|| {
     ///     // Do stuff in a transaction
@@ -157,7 +157,7 @@ impl SqliteConnection {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     let conn = SqliteConnection::establish(":memory:").unwrap();
     /// conn.exclusive_transaction(|| {
     ///     // Do stuff in a transaction
@@ -196,7 +196,7 @@ impl SqliteConnection {
     fn prepare_query<T: QueryFragment + QueryId>(
         &self,
         source: &T,
-    ) -> QueryResult<MaybeCached<Statement>> {
+    ) -> QueryResult> {
         let mut statement = self.cached_prepared_statement(source)?;
 
         let mut bind_collector = RawBytesBindCollector::<Sqlite>::new();
@@ -213,7 +213,7 @@ impl SqliteConnection {
     fn cached_prepared_statement<T: QueryFragment + QueryId>(
         &self,
         source: &T,
-    ) -> QueryResult<MaybeCached<Statement>> {
+    ) -> QueryResult> {
         self.statement_cache.cached_statement(source, &[], |sql| {
             Statement::prepare(&self.raw_connection, sql)
         })
@@ -225,7 +225,7 @@ impl SqliteConnection {
         fn_name: &str,
         deterministic: bool,
         mut f: F,
-    ) -> QueryResult<()>
+    ) -> QueryResult
     where
         F: FnMut(Args) -> Ret + Send + 'static,
         Args: Queryable<ArgsSqlType, Sqlite>,
@@ -240,7 +240,7 @@ impl SqliteConnection {
         )
     }
 
-    fn register_diesel_sql_functions(&self) -> QueryResult<()> {
+    fn register_diesel_sql_functions(&self) -> QueryResult {
         use sql_types::{Integer, Text};
 
         functions::register::<Text, Integer, _, _, _>(

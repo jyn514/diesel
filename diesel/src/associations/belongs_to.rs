@@ -69,7 +69,7 @@ pub trait BelongsTo<Parent> {
 /// #     run_test();
 /// # }
 /// #
-/// # fn run_test() -> QueryResult<()> {
+/// # fn run_test() -> QueryResult {
 /// #     let connection = establish_connection();
 /// let users = users::table.load::<User>(&connection)?;
 /// let posts = Post::belonging_to(&users)

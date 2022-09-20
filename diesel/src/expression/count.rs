@@ -64,7 +64,7 @@ impl Expression for CountStar {
 }
 
 impl<DB: Backend> QueryFragment for CountStar {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         out.push_sql("COUNT(*)");
         Ok(())
     }

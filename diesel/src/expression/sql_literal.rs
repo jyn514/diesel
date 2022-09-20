@@ -163,7 +163,7 @@ where
     DB: Backend,
     T: QueryFragment,
 {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         out.unsafe_to_cache_prepared();
         self.inner.walk_ast(out.reborrow())?;
         out.push_sql(&self.sql);
@@ -214,7 +214,7 @@ impl<ST, T> NonAggregate for SqlLiteral<ST, T> {}
 /// #     run_test().unwrap();
 /// # }
 /// #
-/// # fn run_test() -> QueryResult<()> {
+/// # fn run_test() -> QueryResult {
 /// #     use schema::users::dsl::*;
 /// use diesel::dsl::sql;
 /// #     let connection = establish_connection();
@@ -308,7 +308,7 @@ where
     Query: QueryFragment,
     Value: QueryFragment,
 {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         self.query.walk_ast(out.reborrow())?;
         self.value.walk_ast(out.reborrow())?;
         Ok(())

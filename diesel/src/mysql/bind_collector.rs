@@ -19,7 +19,7 @@ impl MysqlBindCollector {
 }
 
 impl BindCollector<Mysql> for MysqlBindCollector {
-    fn push_bound_value<T, U>(&mut self, bind: &U, metadata_lookup: &()) -> QueryResult<()>
+    fn push_bound_value<T, U>(&mut self, bind: &U, metadata_lookup: &()) -> QueryResult
     where
         Mysql: HasSqlType<T>,
         U: ToSql<T, Mysql>,

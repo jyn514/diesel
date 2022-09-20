@@ -6,7 +6,7 @@ use result::QueryResult;
 pub struct NoLockingClause;
 
 impl<DB: Backend> QueryFragment for NoLockingClause {
-    fn walk_ast(&self, _: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, _: AstPass) -> QueryResult {
         Ok(())
     }
 }
@@ -29,7 +29,7 @@ impl<LockMode, Modifier> LockingClause<LockMode, Modifier> {
 // impl<DB: Backend, L: QueryFragment, M: QueryFragment> QueryFragment
 //     for LockingClause<L, M>
 // {
-//     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+//     fn walk_ast(&self, mut out: AstPass) -> QueryResult {
 //         self.lock_mode.walk_ast(out.reborrow())?;
 //         self.modifier.walk_ast(out.reborrow())
 //     }

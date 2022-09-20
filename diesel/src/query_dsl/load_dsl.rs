@@ -15,7 +15,7 @@ use sql_types::HasSqlType;
 /// [`RunQueryDsl`]: ../trait.RunQueryDsl.html
 pub trait LoadQuery<Conn, U>: RunQueryDsl<Conn> {
     /// Load this query
-    fn internal_load(self, conn: &Conn) -> QueryResult<Vec<U>>;
+    fn internal_load(self, conn: &Conn) -> QueryResult;
 }
 
 impl<Conn, T, U> LoadQuery<Conn, U> for T
@@ -26,7 +26,7 @@ where
     T::Query: QueryFragment + QueryId,
     U: Queryable<T::SqlType, Conn::Backend>,
 {
-    fn internal_load(self, conn: &Conn) -> QueryResult<Vec<U>> {
+    fn internal_load(self, conn: &Conn) -> QueryResult {
         conn.query_by_index(self)
     }
 }
@@ -42,7 +42,7 @@ pub trait ExecuteDsl<Conn: Connection<Backend = DB>, DB: Backend = <Conn as Conn
     Sized
 {
     /// Execute this command
-    fn execute(query: Self, conn: &Conn) -> QueryResult<usize>;
+    fn execute(query: Self, conn: &Conn) -> QueryResult;
 }
 
 impl<Conn, DB, T> ExecuteDsl<Conn, DB> for T
@@ -51,7 +51,7 @@ where
     DB: Backend,
     T: QueryFragment + QueryId,
 {
-    fn execute(query: Self, conn: &Conn) -> QueryResult<usize> {
+    fn execute(query: Self, conn: &Conn) -> QueryResult {
         conn.execute_returning_count(&query)
     }
 }

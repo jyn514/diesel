@@ -25,7 +25,7 @@ use result::QueryResult;
 /// * The `Output` generic parameter represents the type of the response.
 pub trait UpdateAndFetchResults<Changes, Output>: Connection {
     /// See the traits documentation.
-    fn update_and_fetch(&self, changeset: Changes) -> QueryResult<Output>;
+    fn update_and_fetch(&self, changeset: Changes) -> QueryResult;
 }
 
 #[cfg(feature = "postgres")]
@@ -37,7 +37,7 @@ where
     Changes: Copy + AsChangeset<Target = <Changes as HasTable>::Table> + IntoUpdateTarget,
     Update<Changes, Changes>: LoadQuery<PgConnection, Output>,
 {
-    fn update_and_fetch(&self, changeset: Changes) -> QueryResult<Output> {
+    fn update_and_fetch(&self, changeset: Changes) -> QueryResult {
         ::update(changeset).set(changeset).get_result(self)
     }
 }
@@ -54,7 +54,7 @@ where
     Update<Changes, Changes>: ExecuteDsl<SqliteConnection>,
     Find<Changes::Table, Changes::Id>: LoadQuery<SqliteConnection, Output>,
 {
-    fn update_and_fetch(&self, changeset: Changes) -> QueryResult<Output> {
+    fn update_and_fetch(&self, changeset: Changes) -> QueryResult {
         ::update(changeset).set(changeset).execute(self)?;
         Changes::table().find(changeset.id()).get_result(self)
     }
@@ -72,7 +72,7 @@ where
     Update<Changes, Changes>: ExecuteDsl<MysqlConnection>,
     Find<Changes::Table, Changes::Id>: LoadQuery<MysqlConnection, Output>,
 {
-    fn update_and_fetch(&self, changeset: Changes) -> QueryResult<Output> {
+    fn update_and_fetch(&self, changeset: Changes) -> QueryResult {
         ::update(changeset).set(changeset).execute(self)?;
         Changes::table().find(changeset.id()).get_result(self)
     }
@@ -111,7 +111,7 @@ where
 /// #     run_test();
 /// # }
 /// #
-/// # fn run_test() -> QueryResult<()> {
+/// # fn run_test() -> QueryResult {
 /// #     use animals::dsl::*;
 /// #     let connection = establish_connection();
 /// let form = AnimalForm { id: 2, name: "Super scary" };
@@ -128,7 +128,7 @@ where
 /// ```
 pub trait SaveChangesDsl<Conn> {
     /// See the trait documentation.
-    fn save_changes<T>(self, connection: &Conn) -> QueryResult<T>
+    fn save_changes<T>(self, connection: &Conn) -> QueryResult
     where
         Self: Sized,
         Conn: UpdateAndFetchResults<Self, T>,

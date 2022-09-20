@@ -58,7 +58,7 @@ impl Binds {
         f(binds.as_mut_ptr())
     }
 
-    pub fn populate_dynamic_buffers(&mut self, stmt: &Statement) -> QueryResult<()> {
+    pub fn populate_dynamic_buffers(&mut self, stmt: &Statement) -> QueryResult {
         for (i, data) in self.data.iter_mut().enumerate() {
             data.did_numeric_overflow_occur()?;
             // This is safe because we are re-binding the invalidated buffers
@@ -195,7 +195,7 @@ impl BindData {
         }
     }
 
-    fn did_numeric_overflow_occur(&self) -> QueryResult<()> {
+    fn did_numeric_overflow_occur(&self) -> QueryResult {
         use result::Error::DeserializationError;
 
         if self.is_truncated() && self.is_fixed_size_buffer() {

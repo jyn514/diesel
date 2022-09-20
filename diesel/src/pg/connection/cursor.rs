@@ -30,7 +30,7 @@ impl<ST, T> Iterator for Cursor<ST, T>
 where
     T: Queryable<ST, Pg>,
 {
-    type Item = QueryResult<T>;
+    type Item = QueryResult;
 
     fn next(&mut self) -> Option<Self::Item> {
         if self.current_row >= self.db_result.num_rows() {
@@ -55,7 +55,7 @@ impl NamedCursor {
         NamedCursor { db_result }
     }
 
-    pub fn collect<T>(self) -> QueryResult<Vec<T>>
+    pub fn collect<T>(self) -> QueryResult
     where
         T: QueryableByName<Pg>,
     {

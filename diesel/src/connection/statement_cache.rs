@@ -131,10 +131,10 @@ where
         source: &T,
         bind_types: &[DB::TypeMetadata],
         prepare_fn: F,
-    ) -> QueryResult<MaybeCached<Statement>>
+    ) -> QueryResult
     where
         T: QueryFragment + QueryId,
-        F: FnOnce(&str) -> QueryResult<Statement>,
+        F: FnOnce(&str) -> QueryResult,
     {
         use std::collections::hash_map::Entry::{Occupied, Vacant};
 
@@ -206,7 +206,7 @@ where
     DB::QueryBuilder: Default,
     DB::TypeMetadata: Clone,
 {
-    pub fn for_source<T>(source: &T, bind_types: &[DB::TypeMetadata]) -> QueryResult<Self>
+    pub fn for_source<T>(source: &T, bind_types: &[DB::TypeMetadata]) -> QueryResult
     where
         T: QueryFragment + QueryId,
     {
@@ -222,14 +222,14 @@ where
         }
     }
 
-    pub fn sql<T: QueryFragment>(&self, source: &T) -> QueryResult<Cow<str>> {
+    pub fn sql<T: QueryFragment>(&self, source: &T) -> QueryResult {
         match *self {
             StatementCacheKey::Type(_) => Self::construct_sql(source).map(Cow::Owned),
             StatementCacheKey::Sql { ref sql, .. } => Ok(Cow::Borrowed(sql)),
         }
     }
 
-    fn construct_sql<T: QueryFragment>(source: &T) -> QueryResult<String> {
+    fn construct_sql<T: QueryFragment>(source: &T) -> QueryResult {
         let mut query_builder = DB::QueryBuilder::default();
         source.to_sql(&mut query_builder)?;
         Ok(query_builder.finish())
@@ -240,9 +240,9 @@ where
 ///
 /// If we were in Haskell (and if `RefMut` were a functor), this would just be
 /// `sequenceA`.
-fn refmut_map_result<T, U, F>(mut refmut: RefMut<T>, mapper: F) -> QueryResult<RefMut<U>>
+fn refmut_map_result<T, U, F>(mut refmut: RefMut<T>, mapper: F) -> QueryResult
 where
-    F: FnOnce(&mut T) -> QueryResult<&mut U>,
+    F: FnOnce(&mut T) -> QueryResult,
 {
     // We can't just use `RefMut::map` here, since to lift the error out of that
     // closure we'd need to return *something*.

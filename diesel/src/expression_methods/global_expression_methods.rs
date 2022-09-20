@@ -155,7 +155,7 @@ pub trait ExpressionMethods: Expression + Sized {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::animals::dsl::*;
     /// #     let connection = establish_connection();
     /// #
@@ -182,7 +182,7 @@ pub trait ExpressionMethods: Expression + Sized {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::animals::dsl::*;
     /// #     let connection = establish_connection();
     /// #
@@ -209,7 +209,7 @@ pub trait ExpressionMethods: Expression + Sized {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::users::dsl::*;
     /// #     let connection = establish_connection();
     /// let data = users
@@ -236,7 +236,7 @@ pub trait ExpressionMethods: Expression + Sized {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::users::dsl::*;
     /// #     let connection = establish_connection();
     /// let data = users
@@ -263,7 +263,7 @@ pub trait ExpressionMethods: Expression + Sized {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::users::dsl::*;
     /// #     let connection = establish_connection();
     /// let data = users
@@ -290,7 +290,7 @@ pub trait ExpressionMethods: Expression + Sized {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::users::dsl::*;
     /// #     let connection = establish_connection();
     /// let data = users
@@ -346,7 +346,7 @@ pub trait ExpressionMethods: Expression + Sized {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::animals::dsl::*;
     /// #     let connection = establish_connection();
     /// #
@@ -382,7 +382,7 @@ pub trait ExpressionMethods: Expression + Sized {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::users::dsl::*;
     /// #     let connection = establish_connection();
     /// #

@@ -26,7 +26,7 @@
 /// #     run_test();
 /// # }
 /// #
-/// # fn run_test() -> QueryResult<()> {
+/// # fn run_test() -> QueryResult {
 /// #     let connection = establish_connection();
 /// #     use users::dsl::*;
 /// #     use posts::dsl::{posts, title};

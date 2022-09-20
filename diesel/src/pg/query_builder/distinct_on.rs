@@ -12,7 +12,7 @@ impl<T> QueryFragment for DistinctOnClause<T>
 where
     T: QueryFragment,
 {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         out.push_sql("DISTINCT ON (");
         self.0.walk_ast(out.reborrow())?;
         out.push_sql(")");

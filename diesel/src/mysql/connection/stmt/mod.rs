@@ -27,7 +27,7 @@ impl Statement {
         }
     }
 
-    pub fn prepare(&self, query: &str) -> QueryResult<()> {
+    pub fn prepare(&self, query: &str) -> QueryResult {
         unsafe {
             ffi::mysql_stmt_prepare(
                 self.stmt.as_ptr(),
@@ -38,7 +38,7 @@ impl Statement {
         self.did_an_error_occur()
     }
 
-    pub fn bind<Iter>(&mut self, binds: Iter) -> QueryResult<()>
+    pub fn bind<Iter>(&mut self, binds: Iter) -> QueryResult
     where
         Iter: IntoIterator<Item = (MysqlType, IsSigned, Option<Vec<u8>>)>,
     {
@@ -57,7 +57,7 @@ impl Statement {
     /// This function should be called instead of `results` on queries which
     /// have no return value. It should never be called on a statement on
     /// which `results` has previously been called?
-    pub unsafe fn execute(&self) -> QueryResult<()> {
+    pub unsafe fn execute(&self) -> QueryResult {
         ffi::mysql_stmt_execute(self.stmt.as_ptr());
         self.did_an_error_occur()?;
         ffi::mysql_stmt_store_result(self.stmt.as_ptr());
@@ -76,14 +76,14 @@ impl Statement {
     pub unsafe fn results(
         &mut self,
         types: Vec<(MysqlType, IsSigned)>,
-    ) -> QueryResult<StatementIterator> {
+    ) -> QueryResult {
         StatementIterator::new(self, types)
     }
 
     /// This function should be called instead of `execute` for queries which
     /// have a return value. After calling this function, `execute` can never
     /// be called on this statement.
-    pub unsafe fn named_results(&mut self) -> QueryResult<NamedStatementIterator> {
+    pub unsafe fn named_results(&mut self) -> QueryResult {
         NamedStatementIterator::new(self)
     }
 
@@ -95,7 +95,7 @@ impl Statement {
 
     /// If the pointers referenced by the `MYSQL_BIND` structures are invalidated,
     /// you must call this function again before calling `mysql_stmt_fetch`.
-    pub unsafe fn bind_result(&self, binds: *mut ffi::MYSQL_BIND) -> QueryResult<()> {
+    pub unsafe fn bind_result(&self, binds: *mut ffi::MYSQL_BIND) -> QueryResult {
         ffi::mysql_stmt_bind_result(self.stmt.as_ptr(), binds);
         self.did_an_error_occur()
     }
@@ -105,7 +105,7 @@ impl Statement {
         bind: &mut ffi::MYSQL_BIND,
         idx: usize,
         offset: usize,
-    ) -> QueryResult<()> {
+    ) -> QueryResult {
         ffi::mysql_stmt_fetch_column(
             self.stmt.as_ptr(),
             bind,
@@ -115,7 +115,7 @@ impl Statement {
         self.did_an_error_occur()
     }
 
-    fn metadata(&self) -> QueryResult<StatementMetadata> {
+    fn metadata(&self) -> QueryResult {
         use result::Error::DeserializationError;
 
         let result_ptr = unsafe { ffi::mysql_stmt_result_metadata(self.stmt.as_ptr()).as_mut() };
@@ -125,7 +125,7 @@ impl Statement {
             .ok_or_else(|| DeserializationError("No metadata exists".into()))
     }
 
-    fn did_an_error_occur(&self) -> QueryResult<()> {
+    fn did_an_error_occur(&self) -> QueryResult {
         use result::Error::DatabaseError;
 
         let error_message = self.last_error_message();

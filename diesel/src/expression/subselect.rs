@@ -51,7 +51,7 @@ where
     DB: Backend,
     T: QueryFragment,
 {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         self.values.walk_ast(out.reborrow())?;
         Ok(())
     }

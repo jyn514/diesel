@@ -202,7 +202,7 @@ pub enum ConnectionError {
 /// This type is exported by `diesel::prelude`, and is generally used by any
 /// code which is interacting with Diesel. This type exists to avoid writing out
 /// `diesel::result::Error`, and is otherwise a direct mapping to `Result`.
-// pub type QueryResult<T> = Result<T, Error>;
+// pub type QueryResult = Result<T, Error>;
 pub use crate::insertable::QueryResult;
 
 /// A specialized result type for establishing connections.
@@ -213,7 +213,7 @@ pub type ConnectionResult<T> = Result<T, ConnectionError>;
 
 /// See the [method documentation](#tymethod.optional).
 pub trait OptionalExtension<T> {
-    /// Converts a `QueryResult<T>` into a `QueryResult<Option<T>>`.
+    /// Converts a `QueryResult` into a `QueryResult>`.
     ///
     /// By default, Diesel treats 0 rows being returned from a query that is expected to return 1
     /// row as an error (e.g. the return value of [`get_result`] or [`first`]). This method will
@@ -227,16 +227,16 @@ pub trait OptionalExtension<T> {
     /// ```rust
     /// use diesel::{QueryResult, NotFound, OptionalExtension};
     ///
-    /// let result: QueryResult<i32> = Ok(1);
+    /// let result: QueryResult = Ok(1);
     /// assert_eq!(Ok(Some(1)), result.optional());
     ///
-    /// let result: QueryResult<i32> = Err(NotFound);
+    /// let result: QueryResult = Err(NotFound);
     /// assert_eq!(Ok(None), result.optional());
     /// ```
     fn optional(self) -> Result<Option<T>, Error>;
 }
 
-impl<T> OptionalExtension<T> for QueryResult<T> {
+impl<T> OptionalExtension<T> for QueryResult {
     fn optional(self) -> Result<Option<T>, Error> {
         match self {
             Ok(value) => Ok(Some(value)),
@@ -356,7 +356,7 @@ fn error_impls_send() {
     let x: &Send = &err;
 }
 
-pub(crate) fn first_or_not_found<T>(records: QueryResult<Vec<T>>) -> QueryResult<T> {
+pub(crate) fn first_or_not_found<T>(records: QueryResult) -> QueryResult {
     records?.into_iter().next().ok_or(Error::NotFound)
 }
 

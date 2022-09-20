@@ -55,7 +55,7 @@ impl<'a> TransactionBuilder<'a> {
     /// #     }
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use users_for_read_only::table as users;
     /// #     use users_for_read_only::columns::*;
     /// #     let conn = connection_no_transaction();
@@ -102,7 +102,7 @@ impl<'a> TransactionBuilder<'a> {
     /// #     assert_eq!(run_test(), Err(RollbackTransaction));
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::users::dsl::*;
     /// #     let conn = connection_no_transaction();
     /// conn.build_transaction()
@@ -144,7 +144,7 @@ impl<'a> TransactionBuilder<'a> {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::users::dsl::*;
     /// #     let conn = connection_no_transaction();
     /// conn.build_transaction()
@@ -172,7 +172,7 @@ impl<'a> TransactionBuilder<'a> {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::users::dsl::*;
     /// #     let conn = connection_no_transaction();
     /// conn.build_transaction()
@@ -200,7 +200,7 @@ impl<'a> TransactionBuilder<'a> {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::users::dsl::*;
     /// #     let conn = connection_no_transaction();
     /// conn.build_transaction()
@@ -225,7 +225,7 @@ impl<'a> TransactionBuilder<'a> {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::users::dsl::*;
     /// #     let conn = connection_no_transaction();
     /// conn.build_transaction()
@@ -250,7 +250,7 @@ impl<'a> TransactionBuilder<'a> {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::users::dsl::*;
     /// #     let conn = connection_no_transaction();
     /// conn.build_transaction()
@@ -298,7 +298,7 @@ impl<'a> TransactionBuilder<'a> {
 }
 
 impl<'a> QueryFragment for TransactionBuilder<'a> {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         out.push_sql("BEGIN TRANSACTION");
         if let Some(ref isolation_level) = self.isolation_level {
             isolation_level.walk_ast(out.reborrow())?;
@@ -321,7 +321,7 @@ enum IsolationLevel {
 }
 
 impl QueryFragment for IsolationLevel {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         out.push_sql(" ISOLATION LEVEL ");
         match *self {
             IsolationLevel::ReadCommitted => out.push_sql("READ COMMITTED"),
@@ -339,7 +339,7 @@ enum ReadMode {
 }
 
 impl QueryFragment for ReadMode {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         match *self {
             ReadMode::ReadOnly => out.push_sql(" READ ONLY"),
             ReadMode::ReadWrite => out.push_sql(" READ WRITE"),
@@ -355,7 +355,7 @@ enum Deferrable {
 }
 
 impl QueryFragment for Deferrable {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         match *self {
             Deferrable::Deferrable => out.push_sql(" DEFERRABLE"),
             Deferrable::NotDeferrable => out.push_sql(" NOT DEFERRABLE"),

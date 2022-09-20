@@ -27,7 +27,7 @@ where
 }
 
 pub trait SelectClauseQueryFragment<QS> {
-    fn walk_ast(&self, source: &QS, pass: AstPass) -> QueryResult<()>;
+    fn walk_ast(&self, source: &QS, pass: AstPass) -> QueryResult;
 }
 
 impl<T, QS, DB> SelectClauseQueryFragment<QS> for SelectClause<T>
@@ -35,7 +35,7 @@ where
     DB: Backend,
     T: QueryFragment,
 {
-    fn walk_ast(&self, _: &QS, pass: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, _: &QS, pass: AstPass) -> QueryResult {
         self.0.walk_ast(pass)
     }
 }
@@ -46,7 +46,7 @@ where
     QS: QuerySource,
     QS::DefaultSelection: QueryFragment,
 {
-    fn walk_ast(&self, source: &QS, pass: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, source: &QS, pass: AstPass) -> QueryResult {
         source.default_selection().walk_ast(pass)
     }
 }

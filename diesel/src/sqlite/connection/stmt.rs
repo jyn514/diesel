@@ -18,7 +18,7 @@ pub struct Statement {
 }
 
 impl Statement {
-    pub fn prepare(raw_connection: &RawConnection, sql: &str) -> QueryResult<Self> {
+    pub fn prepare(raw_connection: &RawConnection, sql: &str) -> QueryResult {
         let mut stmt = ptr::null_mut();
         let mut unused_portion = ptr::null();
         let prepare_result = unsafe {
@@ -39,11 +39,11 @@ impl Statement {
         })
     }
 
-    fn run(&mut self) -> QueryResult<()> {
+    fn run(&mut self) -> QueryResult {
         self.step().map(|_| ())
     }
 
-    pub fn bind(&mut self, tpe: SqliteType, value: Option<Vec<u8>>) -> QueryResult<()> {
+    pub fn bind(&mut self, tpe: SqliteType, value: Option<Vec<u8>>) -> QueryResult {
         self.bind_index += 1;
         let value = SerializedValue {
             ty: tpe,
@@ -76,7 +76,7 @@ impl Statement {
         }
     }
 
-    fn step(&mut self) -> QueryResult<Option<SqliteRow>> {
+    fn step(&mut self) -> QueryResult> {
         match unsafe { ffi::sqlite3_step(self.inner_statement.as_ptr()) } {
             ffi::SQLITE_DONE => Ok(None),
             ffi::SQLITE_ROW => Ok(Some(SqliteRow::new(self.inner_statement))),
@@ -94,7 +94,7 @@ impl Statement {
     }
 }
 
-fn ensure_sqlite_ok(code: libc::c_int, raw_connection: *mut ffi::sqlite3) -> QueryResult<()> {
+fn ensure_sqlite_ok(code: libc::c_int, raw_connection: *mut ffi::sqlite3) -> QueryResult {
     if code == ffi::SQLITE_OK {
         Ok(())
     } else {
@@ -156,11 +156,11 @@ impl<'a> StatementUse<'a> {
         }
     }
 
-    pub fn run(&mut self) -> QueryResult<()> {
+    pub fn run(&mut self) -> QueryResult {
         self.statement.run()
     }
 
-    pub fn step(&mut self) -> QueryResult<Option<SqliteRow>> {
+    pub fn step(&mut self) -> QueryResult> {
         self.statement.step()
     }
 

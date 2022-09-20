@@ -36,7 +36,7 @@ impl RawConnection {
         }
     }
 
-    pub fn exec(&self, query: &str) -> QueryResult<()> {
+    pub fn exec(&self, query: &str) -> QueryResult {
         let mut err_msg = ptr::null_mut();
         let query = CString::new(query)?;
         let callback_fn = None;
@@ -70,9 +70,9 @@ impl RawConnection {
         num_args: usize,
         deterministic: bool,
         f: F,
-    ) -> QueryResult<()>
+    ) -> QueryResult
     where
-        F: FnMut(&Self, &[*mut ffi::sqlite3_value]) -> QueryResult<SerializedValue>
+        F: FnMut(&Self, &[*mut ffi::sqlite3_value]) -> QueryResult
             + Send
             + 'static,
     {
@@ -146,7 +146,7 @@ extern "C" fn run_custom_function<F>(
     num_args: libc::c_int,
     value_ptr: *mut *mut ffi::sqlite3_value,
 ) where
-    F: FnMut(&RawConnection, &[*mut ffi::sqlite3_value]) -> QueryResult<SerializedValue>
+    F: FnMut(&RawConnection, &[*mut ffi::sqlite3_value]) -> QueryResult
         + Send
         + 'static,
 {
@@ -196,7 +196,7 @@ extern "C" fn run_custom_function<F>(
 
 extern "C" fn destroy_boxed_fn<F>(data: *mut libc::c_void)
 where
-    F: FnMut(&RawConnection, &[*mut ffi::sqlite3_value]) -> QueryResult<SerializedValue>
+    F: FnMut(&RawConnection, &[*mut ffi::sqlite3_value]) -> QueryResult
         + Send
         + 'static,
 {

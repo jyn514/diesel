@@ -131,7 +131,7 @@ where
 //     G: QueryFragment,
 //     LC: QueryFragment,
 // {
-//     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+//     fn walk_ast(&self, mut out: AstPass) -> QueryResult {
 //         out.push_sql("SELECT ");
 //         self.distinct.walk_ast(out.reborrow())?;
 //         self.select.walk_ast(&self.from, out.reborrow())?;
@@ -160,7 +160,7 @@ where
 //     G: QueryFragment,
 //     LC: QueryFragment,
 // {
-//     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+//     fn walk_ast(&self, mut out: AstPass) -> QueryResult {
 //         out.push_sql("SELECT ");
 //         self.distinct.walk_ast(out.reborrow())?;
 //         self.select.walk_ast(&(), out.reborrow())?;

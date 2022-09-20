@@ -53,7 +53,7 @@ pub type Result<T> = result::Result<T, Box<dyn Error + Send + Sync>>;
 /// #     run_test();
 /// # }
 /// #
-/// # fn run_test() -> QueryResult<()> {
+/// # fn run_test() -> QueryResult {
 /// #     use schema::users::dsl::*;
 /// #     let connection = establish_connection();
 /// let first_user = users.first(&connection)?;
@@ -105,7 +105,7 @@ pub type Result<T> = result::Result<T, Box<dyn Error + Send + Sync>>;
 /// #     run_test();
 /// # }
 /// #
-/// # fn run_test() -> QueryResult<()> {
+/// # fn run_test() -> QueryResult {
 /// #     use schema::users::dsl::*;
 /// #     let connection = establish_connection();
 /// let first_user = users.first(&connection)?;
@@ -149,7 +149,7 @@ pub type Result<T> = result::Result<T, Box<dyn Error + Send + Sync>>;
 /// #     run_test();
 /// # }
 /// #
-/// # fn run_test() -> QueryResult<()> {
+/// # fn run_test() -> QueryResult {
 /// #     use schema::users::dsl::*;
 /// #     let connection = establish_connection();
 /// let first_user = users.first(&connection)?;
@@ -223,7 +223,7 @@ where
 /// #     run_test();
 /// # }
 /// #
-/// # fn run_test() -> QueryResult<()> {
+/// # fn run_test() -> QueryResult {
 /// #     let connection = establish_connection();
 /// let first_user = sql_query("SELECT * FROM users ORDER BY id LIMIT 1")
 ///     .get_result(&connection)?;
@@ -275,7 +275,7 @@ where
 /// #     run_test();
 /// # }
 /// #
-/// # fn run_test() -> QueryResult<()> {
+/// # fn run_test() -> QueryResult {
 /// #     let connection = establish_connection();
 /// let first_user = sql_query("SELECT * FROM users ORDER BY id LIMIT 1")
 ///     .get_result(&connection)?;

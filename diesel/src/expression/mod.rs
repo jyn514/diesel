@@ -298,7 +298,7 @@ use query_builder::{QueryFragment, QueryId};
 /// #     run_test().unwrap();
 /// # }
 /// #
-/// # fn run_test() -> QueryResult<()> {
+/// # fn run_test() -> QueryResult {
 /// #     let conn = establish_connection();
 /// enum Search {
 ///     Id(i32),

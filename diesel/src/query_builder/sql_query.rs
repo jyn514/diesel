@@ -82,7 +82,7 @@ impl SqlQuery {
 // where
 //     DB: Backend,
 // {
-//     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+//     fn walk_ast(&self, mut out: AstPass) -> QueryResult {
 //         out.unsafe_to_cache_prepared();
 //         out.push_sql(&self.query);
 //         Ok(())
@@ -100,7 +100,7 @@ impl SqlQuery {
 //     Conn: Connection,
 //     T: QueryableByName<Conn::Backend>,
 // {
-//     fn internal_load(self, conn: &Conn) -> QueryResult<Vec<T>> {
+//     fn internal_load(self, conn: &Conn) -> QueryResult> {
 //         conn.query_by_name(&self)
 //     }
 // }
@@ -145,7 +145,7 @@ pub struct UncheckedBind<Query, Value, ST> {
 //     Query: QueryFragment,
 //     Value: ToSql<ST, DB>,
 // {
-//     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+//     fn walk_ast(&self, mut out: AstPass) -> QueryResult {
 //         self.query.walk_ast(out.reborrow())?;
 //         out.push_bind_param_value_only(&self.value)?;
 //         Ok(())
@@ -158,7 +158,7 @@ pub struct UncheckedBind<Query, Value, ST> {
 //     T: QueryableByName<Conn::Backend>,
 //     Self: QueryFragment + QueryId,
 // {
-//     fn internal_load(self, conn: &Conn) -> QueryResult<Vec<T>> {
+//     fn internal_load(self, conn: &Conn) -> QueryResult> {
 //         conn.query_by_name(&self)
 //     }
 // }

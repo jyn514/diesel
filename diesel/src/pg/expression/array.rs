@@ -28,7 +28,7 @@ pub struct ArrayLiteral<T, ST> {
 /// #     run_test().unwrap();
 /// # }
 /// #
-/// # fn run_test() -> QueryResult<()> {
+/// # fn run_test() -> QueryResult {
 /// #     use schema::users::dsl::*;
 /// #     use diesel::dsl::array;
 /// #     use diesel::sql_types::Integer;
@@ -69,7 +69,7 @@ where
     DB: Backend,
     for<'a> (&'a T): QueryFragment,
 {
-    fn walk_ast(&self, mut out: AstPass) -> ::result::QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> ::result::QueryResult {
         out.push_sql("ARRAY[");
         QueryFragment::walk_ast(&&self.elements, out.reborrow())?;
         out.push_sql("]");

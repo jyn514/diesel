@@ -21,7 +21,7 @@ impl Statement {
         &self,
         conn: &RawConnection,
         param_data: &Vec<Option<Vec<u8>>>,
-    ) -> QueryResult<PgResult> {
+    ) -> QueryResult {
         let params_pointer = param_data
             .iter()
             .map(|data| {
@@ -54,7 +54,7 @@ impl Statement {
         sql: &str,
         name: Option<&str>,
         param_types: &[PgTypeMetadata],
-    ) -> QueryResult<Self> {
+    ) -> QueryResult {
         let name = CString::new(name.unwrap_or(""))?;
         let sql = CString::new(sql)?;
         let param_types_vec = param_types.iter().map(|x| x.oid).collect();

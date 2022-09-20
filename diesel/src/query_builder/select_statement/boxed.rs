@@ -84,7 +84,7 @@ where
     QS: QuerySource,
     QS::FromClause: QueryFragment,
 {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         out.push_sql("SELECT ");
         self.distinct.walk_ast(out.reborrow())?;
         self.select.walk_ast(out.reborrow())?;
@@ -108,7 +108,7 @@ impl<'a, ST, DB> QueryFragment for BoxedSelectStatement<'a, ST, (), DB>
 where
     DB: Backend,
 {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         out.push_sql("SELECT ");
         self.distinct.walk_ast(out.reborrow())?;
         self.select.walk_ast(out.reborrow())?;

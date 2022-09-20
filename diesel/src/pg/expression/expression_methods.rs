@@ -97,7 +97,7 @@ pub trait PgTimestampExpressionMethods: Expression + Sized {
     /// # }
     /// #
     /// # #[cfg(all(feature = "postgres", feature = "chrono"))]
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use timestamps::dsl::*;
     /// #     use chrono::*;
     /// #     let connection = establish_connection();
@@ -123,7 +123,7 @@ pub trait PgTimestampExpressionMethods: Expression + Sized {
     /// # }
     /// #
     /// # #[cfg(not(all(feature = "postgres", feature = "chrono")))]
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     Ok(())
     /// # }
     /// ```
@@ -160,7 +160,7 @@ pub trait PgArrayExpressionMethods<ST>: Expression<SqlType = Array<ST>> + Sized 
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use self::posts::dsl::*;
     /// #     let conn = establish_connection();
     /// #     conn.execute("DROP TABLE IF EXISTS posts").unwrap();
@@ -219,7 +219,7 @@ pub trait PgArrayExpressionMethods<ST>: Expression<SqlType = Array<ST>> + Sized 
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use self::posts::dsl::*;
     /// #     let conn = establish_connection();
     /// #     conn.execute("DROP TABLE IF EXISTS posts").unwrap();
@@ -270,7 +270,7 @@ pub trait PgArrayExpressionMethods<ST>: Expression<SqlType = Array<ST>> + Sized 
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use self::posts::dsl::*;
     /// #     let conn = establish_connection();
     /// #     conn.execute("DROP TABLE IF EXISTS posts").unwrap();
@@ -331,7 +331,7 @@ pub trait PgSortExpressionMethods: Sized {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use self::nullable_numbers::dsl::*;
     /// #     let connection = connection_no_data();
     /// #     connection.execute("CREATE TABLE nullable_numbers (nullable_number INTEGER)")?;
@@ -380,7 +380,7 @@ pub trait PgSortExpressionMethods: Sized {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use self::nullable_numbers::dsl::*;
     /// #     let connection = connection_no_data();
     /// #     connection.execute("CREATE TABLE nullable_numbers (nullable_number INTEGER)")?;
@@ -426,7 +426,7 @@ pub trait PgTextExpressionMethods: Expression + Sized {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::animals::dsl::*;
     /// #     let connection = establish_connection();
     /// let starts_with_s = animals
@@ -453,7 +453,7 @@ pub trait PgTextExpressionMethods: Expression + Sized {
     /// #     run_test().unwrap();
     /// # }
     /// #
-    /// # fn run_test() -> QueryResult<()> {
+    /// # fn run_test() -> QueryResult {
     /// #     use schema::animals::dsl::*;
     /// #     let connection = establish_connection();
     /// let doesnt_start_with_s = animals

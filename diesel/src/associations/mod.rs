@@ -29,7 +29,7 @@
 //! #     run_test().unwrap();
 //! # }
 //! #
-//! # fn run_test() -> QueryResult<()> {
+//! # fn run_test() -> QueryResult {
 //! #     let connection = establish_connection();
 //! #     use users::dsl::*;
 //! let user = users.find(2).get_result::<User>(&connection)?;
@@ -175,7 +175,7 @@
 //! #     run_test();
 //! # }
 //! #
-//! # fn run_test() -> QueryResult<()> {
+//! # fn run_test() -> QueryResult {
 //! #     let connection = establish_connection();
 //! #     use users::dsl::*;
 //! #     use posts::dsl::{posts, title};
@@ -230,7 +230,7 @@
 //! #     run_test();
 //! # }
 //! #
-//! # fn run_test() -> QueryResult<()> {
+//! # fn run_test() -> QueryResult {
 //! #     let connection = establish_connection();
 //! let users = users::table.load::<User>(&connection)?;
 //! let posts = Post::belonging_to(&users)

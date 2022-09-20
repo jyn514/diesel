@@ -44,7 +44,7 @@ where
     Target: QueryFragment,
     Action: QueryFragment,
 {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         self.values.walk_ast(out.reborrow())?;
         out.push_sql(" ON CONFLICT");
         self.target.walk_ast(out.reborrow())?;

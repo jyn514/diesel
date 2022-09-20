@@ -77,7 +77,7 @@ pub trait QueryBuilder<DB: Backend> {
 
     /// Quote `identifier`, and add it to the end of the query being
     /// constructed.
-    fn push_identifier(&mut self, identifier: &str) -> QueryResult<()>;
+    fn push_identifier(&mut self, identifier: &str) -> QueryResult;
 
     /// Add a placeholder for a bind parameter to the end of the query being
     /// constructed.
@@ -127,7 +127,7 @@ pub trait SelectQuery {
 pub use crate::insertable::QueryFragment;
 
 // pub trait QueryFragment {
-//     fn walk_ast(&self, pass: AstPass) -> QueryResult<()>;
+//     fn walk_ast(&self, pass: AstPass) -> QueryResult;
 // }
 
 // impl<T: ?Sized, DB> QueryFragment for Box<T>
@@ -135,7 +135,7 @@ pub use crate::insertable::QueryFragment;
 //     DB: Backend,
 //     T: QueryFragment,
 // {
-//     fn walk_ast(&self, pass: AstPass) -> QueryResult<()> {
+//     fn walk_ast(&self, pass: AstPass) -> QueryResult {
 //         QueryFragment::walk_ast(&**self, pass)
 //     }
 // }
@@ -145,13 +145,13 @@ pub use crate::insertable::QueryFragment;
 //     DB: Backend,
 //     T: QueryFragment,
 // {
-//     fn walk_ast(&self, pass: AstPass) -> QueryResult<()> {
+//     fn walk_ast(&self, pass: AstPass) -> QueryResult {
 //         QueryFragment::walk_ast(&**self, pass)
 //     }
 // }
 
 // impl<DB: Backend> QueryFragment for () {
-//     fn walk_ast(&self, _: AstPass) -> QueryResult<()> {
+//     fn walk_ast(&self, _: AstPass) -> QueryResult {
 //         Ok(())
 //     }
 // }
@@ -161,7 +161,7 @@ pub use crate::insertable::QueryFragment;
 //     DB: Backend,
 //     T: QueryFragment,
 // {
-//     fn walk_ast(&self, out: AstPass) -> QueryResult<()> {
+//     fn walk_ast(&self, out: AstPass) -> QueryResult {
 //         match *self {
 //             Some(ref c) => c.walk_ast(out),
 //             None => Ok(()),

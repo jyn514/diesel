@@ -68,7 +68,7 @@ where
     T: Column,
     U: QueryFragment,
 {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         out.push_identifier(T::NAME)?;
         out.push_sql(" = ");
         QueryFragment::walk_ast(&self.expr, out)

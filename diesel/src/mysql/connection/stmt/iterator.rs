@@ -14,7 +14,7 @@ pub struct StatementIterator<'a> {
 #[allow(clippy::should_implement_trait)] // don't neet `Iterator` here
 impl<'a> StatementIterator<'a> {
     #[allow(clippy::new_ret_no_self)]
-    pub fn new(stmt: &'a mut Statement, types: Vec<(MysqlType, IsSigned)>) -> QueryResult<Self> {
+    pub fn new(stmt: &'a mut Statement, types: Vec<(MysqlType, IsSigned)>) -> QueryResult {
         let mut output_binds = Binds::from_output_types(types);
 
         execute_statement(stmt, &mut output_binds)?;
@@ -25,9 +25,9 @@ impl<'a> StatementIterator<'a> {
         })
     }
 
-    pub fn map<F, T>(mut self, mut f: F) -> QueryResult<Vec<T>>
+    pub fn map<F, T>(mut self, mut f: F) -> QueryResult
     where
-        F: FnMut(MysqlRow) -> QueryResult<T>,
+        F: FnMut(MysqlRow) -> QueryResult,
     {
         let mut results = Vec::new();
         while let Some(row) = self.next() {
@@ -36,7 +36,7 @@ impl<'a> StatementIterator<'a> {
         Ok(results)
     }
 
-    fn next(&mut self) -> Option<QueryResult<MysqlRow>> {
+    fn next(&mut self) -> Option<QueryResult> {
         match populate_row_buffers(self.stmt, &mut self.output_binds) {
             Ok(Some(())) => Some(Ok(MysqlRow {
                 col_idx: 0,
@@ -74,7 +74,7 @@ pub struct NamedStatementIterator<'a> {
 #[allow(clippy::should_implement_trait)] // don't need `Iterator` here
 impl<'a> NamedStatementIterator<'a> {
     #[allow(clippy::new_ret_no_self)]
-    pub fn new(stmt: &'a mut Statement) -> QueryResult<Self> {
+    pub fn new(stmt: &'a mut Statement) -> QueryResult {
         let metadata = stmt.metadata()?;
         let mut output_binds = Binds::from_result_metadata(metadata.fields());
 
@@ -87,9 +87,9 @@ impl<'a> NamedStatementIterator<'a> {
         })
     }
 
-    pub fn map<F, T>(mut self, mut f: F) -> QueryResult<Vec<T>>
+    pub fn map<F, T>(mut self, mut f: F) -> QueryResult
     where
-        F: FnMut(NamedMysqlRow) -> QueryResult<T>,
+        F: FnMut(NamedMysqlRow) -> QueryResult,
     {
         let mut results = Vec::new();
         while let Some(row) = self.next() {
@@ -98,7 +98,7 @@ impl<'a> NamedStatementIterator<'a> {
         Ok(results)
     }
 
-    fn next(&mut self) -> Option<QueryResult<NamedMysqlRow>> {
+    fn next(&mut self) -> Option<QueryResult> {
         match populate_row_buffers(self.stmt, &mut self.output_binds) {
             Ok(Some(())) => Some(Ok(NamedMysqlRow {
                 binds: &self.output_binds,
@@ -125,7 +125,7 @@ impl<'a> NamedRow<Mysql> for NamedMysqlRow<'a> {
     }
 }
 
-fn execute_statement(stmt: &mut Statement, binds: &mut Binds) -> QueryResult<()> {
+fn execute_statement(stmt: &mut Statement, binds: &mut Binds) -> QueryResult {
     unsafe {
         binds.with_mysql_binds(|bind_ptr| stmt.bind_result(bind_ptr))?;
         stmt.execute()?;
@@ -133,7 +133,7 @@ fn execute_statement(stmt: &mut Statement, binds: &mut Binds) -> QueryResult<()>
     Ok(())
 }
 
-fn populate_row_buffers(stmt: &Statement, binds: &mut Binds) -> QueryResult<Option<()>> {
+fn populate_row_buffers(stmt: &Statement, binds: &mut Binds) -> QueryResult> {
     let next_row_result = unsafe { ffi::mysql_stmt_fetch(stmt.stmt.as_ptr()) };
     match next_row_result as libc::c_uint {
         ffi::MYSQL_NO_DATA => Ok(None),

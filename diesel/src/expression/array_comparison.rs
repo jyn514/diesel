@@ -61,7 +61,7 @@ where
     T: QueryFragment,
     U: QueryFragment + MaybeEmpty,
 {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         if self.values.is_empty() {
             out.push_sql("1=0");
         } else {
@@ -80,7 +80,7 @@ where
     T: QueryFragment,
     U: QueryFragment + MaybeEmpty,
 {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         if self.values.is_empty() {
             out.push_sql("1=1");
         } else {
@@ -176,7 +176,7 @@ where
     DB: Backend,
     T: QueryFragment,
 {
-    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         out.unsafe_to_cache_prepared();
         let mut first = true;
         for value in &self.0 {

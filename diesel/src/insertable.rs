@@ -30,16 +30,16 @@ pub use self::reproduce::{AstPass, QueryResult};
     // }
 
 pub trait QueryFragment {
-    fn walk_ast(&self, pass: AstPass) -> QueryResult<()>;
+    fn walk_ast(&self, pass: AstPass) -> QueryResult;
 }
 
 
 mod reproduce {
     use super::{QueryFragment};
 
-    pub type QueryResult<T> = Result<T, ()>;
+    pub type QueryResult = Result<u32, ()>;
 // pub trait QueryFragment {
-//     fn walk_ast(&self, pass: AstPass) -> QueryResult<()>;
+//     fn walk_ast(&self, pass: AstPass) -> QueryResult;
 // }
 
 
@@ -73,7 +73,7 @@ mod reproduce {
     where
         &'a T: Insertable<Values = Foo>,
     {
-        fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
+        fn walk_ast(&self, mut out: AstPass) -> QueryResult {
         }
     }
 
