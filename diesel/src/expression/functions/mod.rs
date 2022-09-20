@@ -49,7 +49,7 @@ macro_rules! sql_function_body {
         //     DB: $crate::backend::Backend,
         //     for <'a> ($(&'a $arg_name),*): $crate::query_builder::QueryFragment<DB>,
         // {
-        //     fn walk_ast(&self, mut out: $crate::query_builder::AstPass<DB>) -> $crate::result::QueryResult<()> {
+        //     fn walk_ast(&self, mut out: $crate::query_builder::AstPass) -> $crate::result::QueryResult<()> {
         //         out.push_sql(concat!(stringify!($fn_name), "("));
         //         $crate::query_builder::QueryFragment::walk_ast(
         //             &($(&self.$arg_name),*), out.reborrow())?;
@@ -245,7 +245,7 @@ macro_rules! __diesel_sql_function_body {
                 DB: $crate::backend::Backend,
                 for<'a> ($(&'a $arg_name),*): $crate::query_builder::QueryFragment<DB>,
             {
-                fn walk_ast(&self, mut out: $crate::query_builder::AstPass<DB>) -> $crate::result::QueryResult<()> {
+                fn walk_ast(&self, mut out: $crate::query_builder::AstPass) -> $crate::result::QueryResult<()> {
                     out.push_sql(concat!($sql_name, "("));
                     $crate::query_builder::QueryFragment::walk_ast(
                         &($(&self.$arg_name),*), out.reborrow())?;
@@ -624,7 +624,7 @@ macro_rules! no_arg_sql_function_body {
         // impl<DB> $crate::query_builder::QueryFragment<DB> for $type_name where
         //     DB: $crate::backend::Backend + $($constraint)::+,
         // {
-        //     fn walk_ast(&self, mut out: $crate::query_builder::AstPass<DB>) -> $crate::result::QueryResult<()> {
+        //     fn walk_ast(&self, mut out: $crate::query_builder::AstPass) -> $crate::result::QueryResult<()> {
         //         out.push_sql(concat!(stringify!($type_name), "()"));
         //         Ok(())
         //     }
@@ -637,7 +637,7 @@ macro_rules! no_arg_sql_function_body {
         impl<DB> $crate::query_builder::QueryFragment<DB> for $type_name where
             DB: $crate::backend::Backend,
         {
-            fn walk_ast(&self, mut out: $crate::query_builder::AstPass<DB>) -> $crate::result::QueryResult<()> {
+            fn walk_ast(&self, mut out: $crate::query_builder::AstPass) -> $crate::result::QueryResult<()> {
                 out.push_sql(concat!(stringify!($type_name), "()"));
                 Ok(())
             }

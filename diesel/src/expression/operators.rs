@@ -93,7 +93,7 @@ macro_rules! __diesel_operator_body {
         //         $($ty_param: $crate::query_builder::QueryFragment<$backend_ty>,)+
         //         $($backend_ty_param: $crate::backend::Backend,)*
         // {
-        //     fn walk_ast(&self, mut out: $crate::query_builder::AstPass<$backend_ty>) -> $crate::result::QueryResult<()> {
+        //     fn walk_ast(&self, mut out: $crate::query_builder::AstPass) -> $crate::result::QueryResult<()> {
         //         __diesel_operator_to_sql!(
         //             notation = $notation,
         //             operator_expr = out.push_sql($operator),

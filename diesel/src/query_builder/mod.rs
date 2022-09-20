@@ -127,7 +127,7 @@ pub trait SelectQuery {
 pub use crate::insertable::QueryFragment;
 
 // pub trait QueryFragment<DB: Backend> {
-//     fn walk_ast(&self, pass: AstPass<DB>) -> QueryResult<()>;
+//     fn walk_ast(&self, pass: AstPass) -> QueryResult<()>;
 // }
 
 // impl<T: ?Sized, DB> QueryFragment<DB> for Box<T>
@@ -135,7 +135,7 @@ pub use crate::insertable::QueryFragment;
 //     DB: Backend,
 //     T: QueryFragment<DB>,
 // {
-//     fn walk_ast(&self, pass: AstPass<DB>) -> QueryResult<()> {
+//     fn walk_ast(&self, pass: AstPass) -> QueryResult<()> {
 //         QueryFragment::walk_ast(&**self, pass)
 //     }
 // }
@@ -145,13 +145,13 @@ pub use crate::insertable::QueryFragment;
 //     DB: Backend,
 //     T: QueryFragment<DB>,
 // {
-//     fn walk_ast(&self, pass: AstPass<DB>) -> QueryResult<()> {
+//     fn walk_ast(&self, pass: AstPass) -> QueryResult<()> {
 //         QueryFragment::walk_ast(&**self, pass)
 //     }
 // }
 
 // impl<DB: Backend> QueryFragment<DB> for () {
-//     fn walk_ast(&self, _: AstPass<DB>) -> QueryResult<()> {
+//     fn walk_ast(&self, _: AstPass) -> QueryResult<()> {
 //         Ok(())
 //     }
 // }
@@ -161,7 +161,7 @@ pub use crate::insertable::QueryFragment;
 //     DB: Backend,
 //     T: QueryFragment<DB>,
 // {
-//     fn walk_ast(&self, out: AstPass<DB>) -> QueryResult<()> {
+//     fn walk_ast(&self, out: AstPass) -> QueryResult<()> {
 //         match *self {
 //             Some(ref c) => c.walk_ast(out),
 //             None => Ok(()),

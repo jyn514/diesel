@@ -61,7 +61,7 @@ pub trait OnConflictTarget<Table>: QueryFragment<Pg> {}
 pub struct NoConflictTarget;
 
 impl QueryFragment<Pg> for NoConflictTarget {
-    fn walk_ast(&self, _: AstPass<Pg>) -> QueryResult<()> {
+    fn walk_ast(&self, _: AstPass) -> QueryResult<()> {
         Ok(())
     }
 }
@@ -73,7 +73,7 @@ impl<Table> OnConflictTarget<Table> for NoConflictTarget {}
 pub struct ConflictTarget<T>(pub T);
 
 impl<T: Column> QueryFragment<Pg> for ConflictTarget<T> {
-    fn walk_ast(&self, mut out: AstPass<Pg>) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql(" (");
         out.push_identifier(T::NAME)?;
         out.push_sql(")");
@@ -87,7 +87,7 @@ impl<ST> QueryFragment<Pg> for ConflictTarget<SqlLiteral<ST>>
 where
     SqlLiteral<ST>: QueryFragment<Pg>,
 {
-    fn walk_ast(&self, mut out: AstPass<Pg>) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql(" ");
         self.0.walk_ast(out.reborrow())?;
         Ok(())
@@ -100,7 +100,7 @@ impl<Tab, ST> OnConflictTarget<Tab> for ConflictTarget<SqlLiteral<ST>> where
 }
 
 impl<'a> QueryFragment<Pg> for ConflictTarget<OnConstraint<'a>> {
-    fn walk_ast(&self, mut out: AstPass<Pg>) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql(" ON CONSTRAINT ");
         out.push_identifier(self.0.constraint_name)?;
         Ok(())
@@ -115,7 +115,7 @@ macro_rules! on_conflict_tuples {
             T: Column,
             $($col: Column<Table=T::Table>,)+
         {
-            fn walk_ast(&self, mut out: AstPass<Pg>) -> QueryResult<()> {
+            fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
                 out.push_sql(" (");
                 out.push_identifier(T::NAME)?;
                 $(

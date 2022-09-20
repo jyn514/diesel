@@ -182,7 +182,7 @@ impl<T, U, C, Op, Ret> InsertStatement<T, InsertFromSelect<U, C>, Op, Ret> {
 //     Op: QueryFragment<DB>,
 //     Ret: QueryFragment<DB>,
 // {
-//     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+//     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
 //         out.unsafe_to_cache_prepared();
 
 //         if self.records.rows_to_insert() == Some(0) {
@@ -335,7 +335,7 @@ impl<T, U, Op> InsertStatement<T, U, Op> {
 pub struct Insert;
 
 // impl<DB: Backend> QueryFragment<DB> for Insert {
-//     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+//     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
 //         out.push_sql("INSERT");
 //         Ok(())
 //     }
@@ -347,7 +347,7 @@ pub struct InsertOrIgnore;
 
 #[cfg(feature = "sqlite")]
 impl QueryFragment<Sqlite> for InsertOrIgnore {
-    fn walk_ast(&self, mut out: AstPass<Sqlite>) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql("INSERT OR IGNORE");
         Ok(())
     }
@@ -355,7 +355,7 @@ impl QueryFragment<Sqlite> for InsertOrIgnore {
 
 #[cfg(feature = "mysql")]
 impl QueryFragment<Mysql> for InsertOrIgnore {
-    fn walk_ast(&self, mut out: AstPass<Mysql>) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql("INSERT IGNORE");
         Ok(())
     }
@@ -367,7 +367,7 @@ pub struct Replace;
 
 #[cfg(feature = "sqlite")]
 impl QueryFragment<Sqlite> for Replace {
-    fn walk_ast(&self, mut out: AstPass<Sqlite>) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql("REPLACE");
         Ok(())
     }
@@ -375,7 +375,7 @@ impl QueryFragment<Sqlite> for Replace {
 
 #[cfg(feature = "mysql")]
 impl QueryFragment<Mysql> for Replace {
-    fn walk_ast(&self, mut out: AstPass<Mysql>) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql("REPLACE");
         Ok(())
     }
@@ -445,7 +445,7 @@ impl<'a, Tab> Insertable<Tab> for &'a DefaultValues {
 //     DB: Backend + Any,
 // {
 //     #[cfg(feature = "mysql")]
-//     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+//     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
 //         // This can be less hacky once stabilization lands
 //         if TypeId::of::<DB>() == TypeId::of::<::mysql::Mysql>() {
 //             out.push_sql("() VALUES ()");
@@ -456,7 +456,7 @@ impl<'a, Tab> Insertable<Tab> for &'a DefaultValues {
 //     }
 
 //     #[cfg(not(feature = "mysql"))]
-//     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+//     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
 //         out.push_sql("DEFAULT VALUES");
 //         Ok(())
 //     }
@@ -514,7 +514,7 @@ where
 //     T: InsertValues<Tab, DB>,
 //     DefaultValues: QueryFragment<DB>,
 // {
-//     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+//     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
 //         if self.values.is_noop()? {
 //             DefaultValues.walk_ast(out)?;
 //         } else {

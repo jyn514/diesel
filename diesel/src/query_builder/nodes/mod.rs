@@ -6,7 +6,7 @@ use result::QueryResult;
 pub struct Identifier<'a>(pub &'a str);
 
 // impl<'a, DB: Backend> QueryFragment<DB> for Identifier<'a> {
-//     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+//     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
 //         out.push_identifier(self.0)
 //     }
 // }
@@ -34,7 +34,7 @@ impl<'a, T, U> InfixNode<'a, T, U> {
 //     T: QueryFragment<DB>,
 //     U: QueryFragment<DB>,
 // {
-//     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+//     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
 //         self.lhs.walk_ast(out.reborrow())?;
 //         out.push_sql(self.middle);
 //         self.rhs.walk_ast(out.reborrow())?;

@@ -9,7 +9,7 @@ use expression::{
 use insertable::{Insertable};
 use query_builder::insert_statement::CanInsertInSingleQuery;
 pub trait InsertValues<T, DB>: QueryFragment<DB> {
-    fn column_names(&self, out: AstPass<DB>) -> QueryResult<()>;
+    fn column_names(&self, out: AstPass) -> QueryResult<()>;
 }
 
 use query_builder::*;
@@ -90,7 +90,7 @@ macro_rules! tuple_impls {
 
             // impl<$($T: QueryFragment<__DB>),+, __DB: Backend> QueryFragment<__DB> for ($($T,)+) {
             //     #[allow(unused_assignments)]
-            //     fn walk_ast(&self, mut out: AstPass<__DB>) -> QueryResult<()> {
+            //     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
             //         let mut needs_comma = false;
             //         $(
             //             if !self.$idx.is_noop()? {
@@ -111,7 +111,7 @@ macro_rules! tuple_impls {
             {
                 type Table = Tab;
 
-                fn walk_ast<__DB: Backend>(&self, mut out: AstPass<__DB>) -> QueryResult<()> {
+                fn walk_ast<__DB: Backend>(&self, mut out: AstPass) -> QueryResult<()> {
                     $(
                         if $idx != 0 {
                             out.push_sql(", ");
@@ -177,7 +177,7 @@ macro_rules! tuple_impls {
                 __DB: Backend,
                 $($T: InsertValues<Tab, __DB>,)+
             {
-                fn column_names(&self, mut out: AstPass<__DB>) -> QueryResult<()> {
+                fn column_names(&self, mut out: AstPass) -> QueryResult<()> {
                     let mut needs_comma = false;
                     $(
                         let noop_element = self.$idx.is_noop()?;

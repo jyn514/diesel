@@ -69,7 +69,7 @@ where
     DB: Backend,
     for<'a> (&'a T): QueryFragment<DB>,
 {
-    fn walk_ast(&self, mut out: AstPass<DB>) -> ::result::QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> ::result::QueryResult<()> {
         out.push_sql("ARRAY[");
         QueryFragment::walk_ast(&&self.elements, out.reborrow())?;
         out.push_sql("]");

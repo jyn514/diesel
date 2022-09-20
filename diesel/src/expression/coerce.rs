@@ -48,7 +48,7 @@ where
     T: QueryFragment<DB>,
     DB: Backend,
 {
-    fn walk_ast(&self, pass: AstPass<DB>) -> QueryResult<()> {
+    fn walk_ast(&self, pass: AstPass) -> QueryResult<()> {
         self.expr.walk_ast(pass)
     }
 }

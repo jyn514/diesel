@@ -32,7 +32,7 @@ pub trait WhereOr<Predicate> {
 pub struct NoWhereClause;
 
 impl<DB: Backend> QueryFragment<DB> for NoWhereClause {
-    fn walk_ast(&self, _: AstPass<DB>) -> QueryResult<()> {
+    fn walk_ast(&self, _: AstPass) -> QueryResult<()> {
         Ok(())
     }
 }
@@ -74,7 +74,7 @@ where
     DB: Backend,
     Expr: QueryFragment<DB>,
 {
-    fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql(" WHERE ");
         self.0.walk_ast(out.reborrow())?;
         Ok(())
@@ -133,7 +133,7 @@ impl<'a, DB> QueryFragment<DB> for BoxedWhereClause<'a, DB>
 where
     DB: Backend,
 {
-    fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         match *self {
             BoxedWhereClause::Where(ref where_clause) => {
                 out.push_sql(" WHERE ");

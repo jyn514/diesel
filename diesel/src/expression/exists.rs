@@ -50,7 +50,7 @@ where
     DB: Backend,
     T: QueryFragment<DB>,
 {
-    fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql("EXISTS (");
         self.0.walk_ast(out.reborrow())?;
         out.push_sql(")");

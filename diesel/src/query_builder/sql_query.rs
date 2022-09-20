@@ -82,7 +82,7 @@ impl SqlQuery {
 // where
 //     DB: Backend,
 // {
-//     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+//     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
 //         out.unsafe_to_cache_prepared();
 //         out.push_sql(&self.query);
 //         Ok(())
@@ -145,7 +145,7 @@ pub struct UncheckedBind<Query, Value, ST> {
 //     Query: QueryFragment<DB>,
 //     Value: ToSql<ST, DB>,
 // {
-//     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+//     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
 //         self.query.walk_ast(out.reborrow())?;
 //         out.push_bind_param_value_only(&self.value)?;
 //         Ok(())

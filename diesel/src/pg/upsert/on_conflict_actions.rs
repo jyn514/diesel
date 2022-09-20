@@ -14,7 +14,7 @@ pub fn excluded<T>(excluded: T) -> Excluded<T> {
 pub struct DoNothing;
 
 impl QueryFragment<Pg> for DoNothing {
-    fn walk_ast(&self, mut out: AstPass<Pg>) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql(" DO NOTHING");
         Ok(())
     }
@@ -36,7 +36,7 @@ impl<T> QueryFragment<Pg> for DoUpdate<T>
 where
     T: QueryFragment<Pg>,
 {
-    fn walk_ast(&self, mut out: AstPass<Pg>) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.unsafe_to_cache_prepared();
         if self.changeset.is_noop()? {
             out.push_sql(" DO NOTHING");
@@ -56,7 +56,7 @@ impl<T> QueryFragment<Pg> for Excluded<T>
 where
     T: Column,
 {
-    fn walk_ast(&self, mut out: AstPass<Pg>) -> QueryResult<()> {
+    fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql("excluded.");
         out.push_identifier(T::NAME)?;
         Ok(())

@@ -25,12 +25,12 @@ use crate::backend::Backend;
 
 pub use self::reproduce::{AstPass, QueryResult};
 
-    // pub struct AstPass<'a, DB>
+    // pub struct AstPass
     // {
     // }
 
 pub trait QueryFragment<DB: Backend> {
-    fn walk_ast(&self, pass: AstPass<DB>) -> QueryResult<()>;
+    fn walk_ast(&self, pass: AstPass) -> QueryResult<()>;
 }
 
 
@@ -39,11 +39,11 @@ mod reproduce {
 
     pub type QueryResult<T> = Result<T, ()>;
 // pub trait QueryFragment<DB> {
-//     fn walk_ast(&self, pass: AstPass<DB>) -> QueryResult<()>;
+//     fn walk_ast(&self, pass: AstPass) -> QueryResult<()>;
 // }
 
 
-    pub struct AstPass<DB>
+    pub struct AstPass
     {
     }
 
@@ -73,7 +73,7 @@ mod reproduce {
     where
         &'a T: Insertable<Values = Foo>,
     {
-        fn walk_ast(&self, mut out: AstPass<Foo>) -> QueryResult<()> {
+        fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         }
     }
 

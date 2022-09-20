@@ -31,7 +31,7 @@ where
     DB: Backend + HasSqlType<T>,
     U: ToSql<T, DB>,
 {
-    fn walk_ast(&self, mut pass: AstPass<DB>) -> QueryResult<()> {
+    fn walk_ast(&self, mut pass: AstPass) -> QueryResult<()> {
         pass.push_bind_param(&self.item)?;
         Ok(())
     }

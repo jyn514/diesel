@@ -22,7 +22,7 @@ use sql_types::HasSqlType;
 /// relevant methods and trust that they will be a no-op if they're not relevant
 /// to the current pass.
 pub use crate::insertable::AstPass;
-// pub struct AstPass<'a, DB>
+// pub struct AstPass
 // where
 //     DB: Backend,
 //     DB::QueryBuilder: 'a,
@@ -32,7 +32,7 @@ pub use crate::insertable::AstPass;
 //     internals: AstPassInternals<'a, DB>,
 // }
 
-// impl<DB> AstPass<DB>
+// impl<DB> AstPass
 // where
 //     DB: Backend,
 // {
@@ -92,7 +92,7 @@ pub use crate::insertable::AstPass;
 //     /// implicitly if you were passing a mutable reference
 //     // Clippy is wrong, this cannot be expressed with pointer casting
 //     #[allow(clippy::transmute_ptr_to_ptr)]
-//     pub fn reborrow(&mut self) -> AstPass<DB> {
+//     pub fn reborrow(&mut self) -> AstPass {
 //         use self::AstPassInternals::*;
 //         let internals = match self.internals {
 //             ToSql(ref mut builder) => ToSql(&mut **builder),
@@ -156,7 +156,7 @@ pub use crate::insertable::AstPass;
 //     ///     Left: QueryFragment<DB>,
 //     ///     Right: QueryFragment<DB>,
 //     /// {
-//     ///     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+//     ///     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
 //     ///         self.left.walk_ast(out.reborrow())?;
 //     ///         out.push_sql(" AND ");
 //     ///         self.right.walk_ast(out.reborrow())?;
