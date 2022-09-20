@@ -11,7 +11,7 @@ macro_rules! simple_clause {
         #[derive(Debug, Clone, Copy, QueryId)]
         pub struct $no_clause;
 
-        // impl<DB: Backend> QueryFragment<DB> for $no_clause {
+        // impl<DB: Backend> QueryFragment for $no_clause {
         //     fn walk_ast(&self, _: AstPass) -> QueryResult<()> {
         //         Ok(())
         //     }
@@ -20,9 +20,9 @@ macro_rules! simple_clause {
         #[derive(Debug, Clone, Copy, QueryId)]
         pub struct $clause<Expr>(pub Expr);
 
-        // impl<Expr, DB> QueryFragment<DB> for $clause<Expr> where
+        // impl<Expr, DB> QueryFragment for $clause<Expr> where
         //     DB: Backend $(+ $backend_bounds)*,
-        //     Expr: QueryFragment<DB>,
+        //     Expr: QueryFragment,
         // {
         //     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         //         out.push_sql($sql);

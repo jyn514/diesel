@@ -150,11 +150,11 @@ pub use crate::insertable::AstPass;
 //     /// # use diesel::backend::Backend;
 //     /// # use diesel::QueryResult;
 //     /// # struct And<Left, Right> { left: Left, right: Right }
-//     /// impl<Left, Right, DB> QueryFragment<DB> for And<Left, Right>
+//     /// impl<Left, Right, DB> QueryFragment for And<Left, Right>
 //     /// where
 //     ///     DB: Backend,
-//     ///     Left: QueryFragment<DB>,
-//     ///     Right: QueryFragment<DB>,
+//     ///     Left: QueryFragment,
+//     ///     Right: QueryFragment,
 //     /// {
 //     ///     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
 //     ///         self.left.walk_ast(out.reborrow())?;

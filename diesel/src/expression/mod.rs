@@ -334,7 +334,7 @@ where
     Self: Expression,
     Self: SelectableExpression<QS>,
     Self: NonAggregate,
-    Self: QueryFragment<DB>,
+    Self: QueryFragment,
 {
 }
 
@@ -344,7 +344,7 @@ where
     T: Expression,
     T: SelectableExpression<QS>,
     T: NonAggregate,
-    T: QueryFragment<DB>,
+    T: QueryFragment,
 {
 }
 

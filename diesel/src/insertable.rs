@@ -29,7 +29,7 @@ pub use self::reproduce::{AstPass, QueryResult};
     // {
     // }
 
-pub trait QueryFragment<DB: Backend> {
+pub trait QueryFragment {
     fn walk_ast(&self, pass: AstPass) -> QueryResult<()>;
 }
 
@@ -38,7 +38,7 @@ mod reproduce {
     use super::{QueryFragment};
 
     pub type QueryResult<T> = Result<T, ()>;
-// pub trait QueryFragment<DB> {
+// pub trait QueryFragment {
 //     fn walk_ast(&self, pass: AstPass) -> QueryResult<()>;
 // }
 
@@ -69,7 +69,7 @@ mod reproduce {
     pub struct BatchInsert {}
     struct Foo{}
 
-    impl<'a, T> QueryFragment<Foo> for BatchInsert
+    impl<'a, T> QueryFragment for BatchInsert
     where
         &'a T: Insertable<Values = Foo>,
     {

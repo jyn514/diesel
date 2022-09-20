@@ -13,7 +13,7 @@ pub fn excluded<T>(excluded: T) -> Excluded<T> {
 #[derive(Debug, Clone, Copy)]
 pub struct DoNothing;
 
-impl QueryFragment<Pg> for DoNothing {
+impl QueryFragment for DoNothing {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql(" DO NOTHING");
         Ok(())
@@ -32,9 +32,9 @@ impl<T> DoUpdate<T> {
     }
 }
 
-impl<T> QueryFragment<Pg> for DoUpdate<T>
+impl<T> QueryFragment for DoUpdate<T>
 where
-    T: QueryFragment<Pg>,
+    T: QueryFragment,
 {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.unsafe_to_cache_prepared();
@@ -52,7 +52,7 @@ where
 #[derive(Debug, Clone, Copy)]
 pub struct Excluded<T>(T);
 
-impl<T> QueryFragment<Pg> for Excluded<T>
+impl<T> QueryFragment for Excluded<T>
 where
     T: Column,
 {

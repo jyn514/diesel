@@ -116,20 +116,20 @@ where
     type SqlType = S::SelectClauseSqlType;
 }
 
-// impl<F, S, D, W, O, L, Of, G, LC, DB> QueryFragment<DB>
+// impl<F, S, D, W, O, L, Of, G, LC, DB> QueryFragment
 //     for SelectStatement<F, S, D, W, O, L, Of, G, LC>
 // where
 //     DB: Backend,
-//     S: SelectClauseQueryFragment<F, DB>,
+//     S: SelectClauseQueryFragment,
 //     F: QuerySource,
-//     F::FromClause: QueryFragment<DB>,
-//     D: QueryFragment<DB>,
-//     W: QueryFragment<DB>,
-//     O: QueryFragment<DB>,
-//     L: QueryFragment<DB>,
-//     Of: QueryFragment<DB>,
-//     G: QueryFragment<DB>,
-//     LC: QueryFragment<DB>,
+//     F::FromClause: QueryFragment,
+//     D: QueryFragment,
+//     W: QueryFragment,
+//     O: QueryFragment,
+//     L: QueryFragment,
+//     Of: QueryFragment,
+//     G: QueryFragment,
+//     LC: QueryFragment,
 // {
 //     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
 //         out.push_sql("SELECT ");
@@ -147,18 +147,18 @@ where
 //     }
 // }
 
-// impl<S, D, W, O, L, Of, G, LC, DB> QueryFragment<DB>
+// impl<S, D, W, O, L, Of, G, LC, DB> QueryFragment
 //     for SelectStatement<(), S, D, W, O, L, Of, G, LC>
 // where
 //     DB: Backend,
-//     S: SelectClauseQueryFragment<(), DB>,
-//     D: QueryFragment<DB>,
-//     W: QueryFragment<DB>,
-//     O: QueryFragment<DB>,
-//     L: QueryFragment<DB>,
-//     Of: QueryFragment<DB>,
-//     G: QueryFragment<DB>,
-//     LC: QueryFragment<DB>,
+//     S: SelectClauseQueryFragment,
+//     D: QueryFragment,
+//     W: QueryFragment,
+//     O: QueryFragment,
+//     L: QueryFragment,
+//     Of: QueryFragment,
+//     G: QueryFragment,
+//     LC: QueryFragment,
 // {
 //     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
 //         out.push_sql("SELECT ");

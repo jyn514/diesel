@@ -62,11 +62,11 @@ pub struct Assign<Col, Expr> {
     expr: Expr,
 }
 
-impl<T, U, DB> QueryFragment<DB> for Assign<T, U>
+impl<T, U, DB> QueryFragment for Assign<T, U>
 where
     DB: Backend,
     T: Column,
-    U: QueryFragment<DB>,
+    U: QueryFragment,
 {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_identifier(T::NAME)?;

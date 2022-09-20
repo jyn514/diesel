@@ -82,9 +82,9 @@ where
     type SqlType = ST;
 }
 
-impl<Expr> QueryFragment<Pg> for Any<Expr>
+impl<Expr> QueryFragment for Any<Expr>
 where
-    Expr: QueryFragment<Pg>,
+    Expr: QueryFragment,
 {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql("ANY(");
@@ -117,9 +117,9 @@ where
     type SqlType = ST;
 }
 
-impl<Expr> QueryFragment<Pg> for All<Expr>
+impl<Expr> QueryFragment for All<Expr>
 where
-    Expr: QueryFragment<Pg>,
+    Expr: QueryFragment,
 {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql("ALL(");

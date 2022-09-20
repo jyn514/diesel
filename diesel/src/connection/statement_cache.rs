@@ -133,7 +133,7 @@ where
         prepare_fn: F,
     ) -> QueryResult<MaybeCached<Statement>>
     where
-        T: QueryFragment<DB> + QueryId,
+        T: QueryFragment + QueryId,
         F: FnOnce(&str) -> QueryResult<Statement>,
     {
         use std::collections::hash_map::Entry::{Occupied, Vacant};
@@ -208,7 +208,7 @@ where
 {
     pub fn for_source<T>(source: &T, bind_types: &[DB::TypeMetadata]) -> QueryResult<Self>
     where
-        T: QueryFragment<DB> + QueryId,
+        T: QueryFragment + QueryId,
     {
         match T::query_id() {
             Some(id) => Ok(StatementCacheKey::Type(id)),
@@ -222,14 +222,14 @@ where
         }
     }
 
-    pub fn sql<T: QueryFragment<DB>>(&self, source: &T) -> QueryResult<Cow<str>> {
+    pub fn sql<T: QueryFragment>(&self, source: &T) -> QueryResult<Cow<str>> {
         match *self {
             StatementCacheKey::Type(_) => Self::construct_sql(source).map(Cow::Owned),
             StatementCacheKey::Sql { ref sql, .. } => Ok(Cow::Borrowed(sql)),
         }
     }
 
-    fn construct_sql<T: QueryFragment<DB>>(source: &T) -> QueryResult<String> {
+    fn construct_sql<T: QueryFragment>(source: &T) -> QueryResult<String> {
         let mut query_builder = DB::QueryBuilder::default();
         source.to_sql(&mut query_builder)?;
         Ok(query_builder.finish())

@@ -78,7 +78,7 @@ impl SqlQuery {
     }
 }
 
-// impl<DB> QueryFragment<DB> for SqlQuery
+// impl<DB> QueryFragment for SqlQuery
 // where
 //     DB: Backend,
 // {
@@ -139,10 +139,10 @@ pub struct UncheckedBind<Query, Value, ST> {
 //     const HAS_STATIC_QUERY_ID: bool = Query::HAS_STATIC_QUERY_ID && ST::HAS_STATIC_QUERY_ID;
 // }
 
-// impl<Query, Value, ST, DB> QueryFragment<DB> for UncheckedBind<Query, Value, ST>
+// impl<Query, Value, ST, DB> QueryFragment for UncheckedBind<Query, Value, ST>
 // where
 //     DB: Backend + HasSqlType<ST>,
-//     Query: QueryFragment<DB>,
+//     Query: QueryFragment,
 //     Value: ToSql<ST, DB>,
 // {
 //     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
@@ -156,7 +156,7 @@ pub struct UncheckedBind<Query, Value, ST> {
 // where
 //     Conn: Connection,
 //     T: QueryableByName<Conn::Backend>,
-//     Self: QueryFragment<Conn::Backend> + QueryId,
+//     Self: QueryFragment + QueryId,
 // {
 //     fn internal_load(self, conn: &Conn) -> QueryResult<Vec<T>> {
 //         conn.query_by_name(&self)

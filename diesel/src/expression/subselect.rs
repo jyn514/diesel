@@ -46,10 +46,10 @@ where
 
 impl<T, ST> NonAggregate for Subselect<T, ST> {}
 
-impl<T, ST, DB> QueryFragment<DB> for Subselect<T, ST>
+impl<T, ST, DB> QueryFragment for Subselect<T, ST>
 where
     DB: Backend,
-    T: QueryFragment<DB>,
+    T: QueryFragment,
 {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         self.values.walk_ast(out.reborrow())?;

@@ -45,10 +45,10 @@ where
 
 impl<T> NonAggregate for Exists<T> {}
 
-impl<T, DB> QueryFragment<DB> for Exists<T>
+impl<T, DB> QueryFragment for Exists<T>
 where
     DB: Backend,
-    T: QueryFragment<DB>,
+    T: QueryFragment,
 {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql("EXISTS (");

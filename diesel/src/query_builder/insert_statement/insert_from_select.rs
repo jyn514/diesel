@@ -43,11 +43,11 @@ impl<Select, Columns> InsertFromSelect<Select, Columns> {
 //     }
 // }
 
-impl<DB, Select, Columns> QueryFragment<DB> for InsertFromSelect<Select, Columns>
+impl<DB, Select, Columns> QueryFragment for InsertFromSelect<Select, Columns>
 where
     DB: Backend,
     Columns: ColumnList + Expression<SqlType = Select::SqlType>,
-    Select: Query + QueryFragment<DB>,
+    Select: Query + QueryFragment,
 {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql("(");

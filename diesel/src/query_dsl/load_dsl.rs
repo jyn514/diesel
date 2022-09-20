@@ -23,7 +23,7 @@ where
     Conn: Connection,
     Conn::Backend: HasSqlType<T::SqlType>,
     T: AsQuery + RunQueryDsl<Conn>,
-    T::Query: QueryFragment<Conn::Backend> + QueryId,
+    T::Query: QueryFragment + QueryId,
     U: Queryable<T::SqlType, Conn::Backend>,
 {
     fn internal_load(self, conn: &Conn) -> QueryResult<Vec<U>> {
@@ -49,7 +49,7 @@ impl<Conn, DB, T> ExecuteDsl<Conn, DB> for T
 where
     Conn: Connection<Backend = DB>,
     DB: Backend,
-    T: QueryFragment<DB> + QueryId,
+    T: QueryFragment + QueryId,
 {
     fn execute(query: Self, conn: &Conn) -> QueryResult<usize> {
         conn.execute_returning_count(&query)

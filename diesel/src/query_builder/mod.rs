@@ -126,40 +126,40 @@ pub trait SelectQuery {
 
 pub use crate::insertable::QueryFragment;
 
-// pub trait QueryFragment<DB: Backend> {
+// pub trait QueryFragment {
 //     fn walk_ast(&self, pass: AstPass) -> QueryResult<()>;
 // }
 
-// impl<T: ?Sized, DB> QueryFragment<DB> for Box<T>
+// impl<T: ?Sized, DB> QueryFragment for Box<T>
 // where
 //     DB: Backend,
-//     T: QueryFragment<DB>,
+//     T: QueryFragment,
 // {
 //     fn walk_ast(&self, pass: AstPass) -> QueryResult<()> {
 //         QueryFragment::walk_ast(&**self, pass)
 //     }
 // }
 
-// impl<'a, T: ?Sized, DB> QueryFragment<DB> for &'a T
+// impl<'a, T: ?Sized, DB> QueryFragment for &'a T
 // where
 //     DB: Backend,
-//     T: QueryFragment<DB>,
+//     T: QueryFragment,
 // {
 //     fn walk_ast(&self, pass: AstPass) -> QueryResult<()> {
 //         QueryFragment::walk_ast(&**self, pass)
 //     }
 // }
 
-// impl<DB: Backend> QueryFragment<DB> for () {
+// impl<DB: Backend> QueryFragment for () {
 //     fn walk_ast(&self, _: AstPass) -> QueryResult<()> {
 //         Ok(())
 //     }
 // }
 
-// impl<T, DB> QueryFragment<DB> for Option<T>
+// impl<T, DB> QueryFragment for Option<T>
 // where
 //     DB: Backend,
-//     T: QueryFragment<DB>,
+//     T: QueryFragment,
 // {
 //     fn walk_ast(&self, out: AstPass) -> QueryResult<()> {
 //         match *self {

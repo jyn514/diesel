@@ -64,10 +64,10 @@ where
     type SqlType = sql_types::Array<ST>;
 }
 
-impl<T, ST, DB> QueryFragment<DB> for ArrayLiteral<T, ST>
+impl<T, ST, DB> QueryFragment for ArrayLiteral<T, ST>
 where
     DB: Backend,
-    for<'a> (&'a T): QueryFragment<DB>,
+    for<'a> (&'a T): QueryFragment,
 {
     fn walk_ast(&self, mut out: AstPass) -> ::result::QueryResult<()> {
         out.push_sql("ARRAY[");

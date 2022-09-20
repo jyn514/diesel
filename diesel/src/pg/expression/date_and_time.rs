@@ -36,10 +36,10 @@ where
 
 impl<Ts, Tz> NonAggregate for AtTimeZone<Ts, Tz> where AtTimeZone<Ts, Tz>: Expression {}
 
-impl<Ts, Tz> QueryFragment<Pg> for AtTimeZone<Ts, Tz>
+impl<Ts, Tz> QueryFragment for AtTimeZone<Ts, Tz>
 where
-    Ts: QueryFragment<Pg>,
-    Tz: QueryFragment<Pg>,
+    Ts: QueryFragment,
+    Tz: QueryFragment,
 {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         self.timestamp.walk_ast(out.reborrow())?;

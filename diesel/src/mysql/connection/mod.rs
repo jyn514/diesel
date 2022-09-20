@@ -63,7 +63,7 @@ impl Connection for MysqlConnection {
     fn query_by_index<T, U>(&self, source: T) -> QueryResult<Vec<U>>
     where
         T: AsQuery,
-        T::Query: QueryFragment<Self::Backend> + QueryId,
+        T::Query: QueryFragment + QueryId,
         Self::Backend: HasSqlType<T::SqlType>,
         U: Queryable<T::SqlType, Self::Backend>,
     {
@@ -84,7 +84,7 @@ impl Connection for MysqlConnection {
     #[doc(hidden)]
     fn query_by_name<T, U>(&self, source: &T) -> QueryResult<Vec<U>>
     where
-        T: QueryFragment<Self::Backend> + QueryId,
+        T: QueryFragment + QueryId,
         U: QueryableByName<Self::Backend>,
     {
         use result::Error::DeserializationError;
@@ -97,7 +97,7 @@ impl Connection for MysqlConnection {
     #[doc(hidden)]
     fn execute_returning_count<T>(&self, source: &T) -> QueryResult<usize>
     where
-        T: QueryFragment<Self::Backend> + QueryId,
+        T: QueryFragment + QueryId,
     {
         let stmt = self.prepare_query(source)?;
         unsafe {
@@ -115,7 +115,7 @@ impl Connection for MysqlConnection {
 impl MysqlConnection {
     fn prepare_query<T>(&self, source: &T) -> QueryResult<MaybeCached<Statement>>
     where
-        T: QueryFragment<Mysql> + QueryId,
+        T: QueryFragment + QueryId,
     {
         let mut stmt = self
             .statement_cache

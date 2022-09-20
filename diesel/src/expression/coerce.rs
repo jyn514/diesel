@@ -43,9 +43,9 @@ impl<T, ST, QS> SelectableExpression<QS> for Coerce<T, ST> where T: SelectableEx
 
 impl<T, ST, QS> AppearsOnTable<QS> for Coerce<T, ST> where T: AppearsOnTable<QS> {}
 
-impl<T, ST, DB> QueryFragment<DB> for Coerce<T, ST>
+impl<T, ST, DB> QueryFragment for Coerce<T, ST>
 where
-    T: QueryFragment<DB>,
+    T: QueryFragment,
     DB: Backend,
 {
     fn walk_ast(&self, pass: AstPass) -> QueryResult<()> {

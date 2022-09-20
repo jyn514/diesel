@@ -22,10 +22,10 @@ where
     type SqlType = <<T as Expression>::SqlType as IntoNullable>::Nullable;
 }
 
-impl<T, DB> QueryFragment<DB> for Nullable<T>
+impl<T, DB> QueryFragment for Nullable<T>
 where
     DB: Backend,
-    T: QueryFragment<DB>,
+    T: QueryFragment,
 {
     fn walk_ast(&self, pass: AstPass) -> QueryResult<()> {
         self.0.walk_ast(pass)

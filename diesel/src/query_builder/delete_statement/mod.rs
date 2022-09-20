@@ -158,13 +158,13 @@ where
     }
 }
 
-impl<T, U, Ret, DB> QueryFragment<DB> for DeleteStatement<T, U, Ret>
+impl<T, U, Ret, DB> QueryFragment for DeleteStatement<T, U, Ret>
 where
     DB: Backend,
     T: Table,
-    T::FromClause: QueryFragment<DB>,
-    U: QueryFragment<DB>,
-    Ret: QueryFragment<DB>,
+    T::FromClause: QueryFragment,
+    U: QueryFragment,
+    Ret: QueryFragment,
 {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql("DELETE FROM ");

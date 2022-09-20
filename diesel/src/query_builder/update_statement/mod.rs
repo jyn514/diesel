@@ -193,14 +193,14 @@ where
     }
 }
 
-impl<T, U, V, Ret, DB> QueryFragment<DB> for UpdateStatement<T, U, V, Ret>
+impl<T, U, V, Ret, DB> QueryFragment for UpdateStatement<T, U, V, Ret>
 where
     DB: Backend,
     T: Table,
-    T::FromClause: QueryFragment<DB>,
-    U: QueryFragment<DB>,
-    V: QueryFragment<DB>,
-    Ret: QueryFragment<DB>,
+    T::FromClause: QueryFragment,
+    U: QueryFragment,
+    V: QueryFragment,
+    Ret: QueryFragment,
 {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         if self.values.is_noop()? {

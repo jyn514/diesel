@@ -68,7 +68,7 @@ impl Connection for PgConnection {
     fn query_by_index<T, U>(&self, source: T) -> QueryResult<Vec<U>>
     where
         T: AsQuery,
-        T::Query: QueryFragment<Pg> + QueryId,
+        T::Query: QueryFragment + QueryId,
         Pg: HasSqlType<T::SqlType>,
         U: Queryable<T::SqlType, Pg>,
     {
@@ -81,7 +81,7 @@ impl Connection for PgConnection {
     #[doc(hidden)]
     fn query_by_name<T, U>(&self, source: &T) -> QueryResult<Vec<U>>
     where
-        T: QueryFragment<Pg> + QueryId,
+        T: QueryFragment + QueryId,
         U: QueryableByName<Pg>,
     {
         let (query, params) = self.prepare_query(source)?;
@@ -93,7 +93,7 @@ impl Connection for PgConnection {
     #[doc(hidden)]
     fn execute_returning_count<T>(&self, source: &T) -> QueryResult<usize>
     where
-        T: QueryFragment<Pg> + QueryId,
+        T: QueryFragment + QueryId,
     {
         let (query, params) = self.prepare_query(source)?;
         query
@@ -137,7 +137,7 @@ impl PgConnection {
     }
 
     #[allow(clippy::type_complexity)]
-    fn prepare_query<T: QueryFragment<Pg> + QueryId>(
+    fn prepare_query<T: QueryFragment + QueryId>(
         &self,
         source: &T,
     ) -> QueryResult<(MaybeCached<Statement>, Vec<Option<Vec<u8>>>)> {

@@ -26,7 +26,7 @@ impl<T, U> Expression for Bound<T, U> {
     type SqlType = T;
 }
 
-impl<T, U, DB> QueryFragment<DB> for Bound<T, U>
+impl<T, U, DB> QueryFragment for Bound<T, U>
 where
     DB: Backend + HasSqlType<T>,
     U: ToSql<T, DB>,

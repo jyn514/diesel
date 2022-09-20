@@ -158,10 +158,10 @@ impl<ST, T> Expression for SqlLiteral<ST, T> {
     type SqlType = ST;
 }
 
-impl<ST, T, DB> QueryFragment<DB> for SqlLiteral<ST, T>
+impl<ST, T, DB> QueryFragment for SqlLiteral<ST, T>
 where
     DB: Backend,
-    T: QueryFragment<DB>,
+    T: QueryFragment,
 {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.unsafe_to_cache_prepared();
@@ -302,11 +302,11 @@ where
     type SqlType = Query::SqlType;
 }
 
-impl<Query, Value, DB> QueryFragment<DB> for UncheckedBind<Query, Value>
+impl<Query, Value, DB> QueryFragment for UncheckedBind<Query, Value>
 where
     DB: Backend,
-    Query: QueryFragment<DB>,
-    Value: QueryFragment<DB>,
+    Query: QueryFragment,
+    Value: QueryFragment,
 {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         self.query.walk_ast(out.reborrow())?;

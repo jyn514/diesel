@@ -127,7 +127,7 @@ where
     fn query_by_index<T, U>(&self, source: T) -> QueryResult<Vec<U>>
     where
         T: AsQuery,
-        T::Query: QueryFragment<Self::Backend> + QueryId,
+        T::Query: QueryFragment + QueryId,
         Self::Backend: HasSqlType<T::SqlType>,
         U: Queryable<T::SqlType, Self::Backend>,
     {
@@ -136,7 +136,7 @@ where
 
     fn query_by_name<T, U>(&self, source: &T) -> QueryResult<Vec<U>>
     where
-        T: QueryFragment<Self::Backend> + QueryId,
+        T: QueryFragment + QueryId,
         U: QueryableByName<Self::Backend>,
     {
         (&**self).query_by_name(source)
@@ -144,7 +144,7 @@ where
 
     fn execute_returning_count<T>(&self, source: &T) -> QueryResult<usize>
     where
-        T: QueryFragment<Self::Backend> + QueryId,
+        T: QueryFragment + QueryId,
     {
         (&**self).execute_returning_count(source)
     }

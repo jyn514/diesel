@@ -22,28 +22,28 @@ use sql_types::{BigInt, Bool, NotNull, Nullable};
 
 #[allow(missing_debug_implementations)]
 pub struct BoxedSelectStatement<'a, ST, QS, DB> {
-    select: Box<dyn QueryFragment<DB> + 'a>,
+    select: Box<dyn QueryFragment + 'a>,
     from: QS,
-    distinct: Box<dyn QueryFragment<DB> + 'a>,
+    distinct: Box<dyn QueryFragment + 'a>,
     where_clause: BoxedWhereClause<'a, DB>,
-    order: Option<Box<dyn QueryFragment<DB> + 'a>>,
-    limit: Box<dyn QueryFragment<DB> + 'a>,
-    offset: Box<dyn QueryFragment<DB> + 'a>,
-    group_by: Box<dyn QueryFragment<DB> + 'a>,
+    order: Option<Box<dyn QueryFragment + 'a>>,
+    limit: Box<dyn QueryFragment + 'a>,
+    offset: Box<dyn QueryFragment + 'a>,
+    group_by: Box<dyn QueryFragment + 'a>,
     _marker: PhantomData<ST>,
 }
 
 impl<'a, ST, QS, DB> BoxedSelectStatement<'a, ST, QS, DB> {
     #[allow(clippy::too_many_arguments)]
     pub fn new(
-        select: Box<dyn QueryFragment<DB> + 'a>,
+        select: Box<dyn QueryFragment + 'a>,
         from: QS,
-        distinct: Box<dyn QueryFragment<DB> + 'a>,
+        distinct: Box<dyn QueryFragment + 'a>,
         where_clause: BoxedWhereClause<'a, DB>,
-        order: Option<Box<dyn QueryFragment<DB> + 'a>>,
-        limit: Box<dyn QueryFragment<DB> + 'a>,
-        offset: Box<dyn QueryFragment<DB> + 'a>,
-        group_by: Box<dyn QueryFragment<DB> + 'a>,
+        order: Option<Box<dyn QueryFragment + 'a>>,
+        limit: Box<dyn QueryFragment + 'a>,
+        offset: Box<dyn QueryFragment + 'a>,
+        group_by: Box<dyn QueryFragment + 'a>,
     ) -> Self {
         BoxedSelectStatement {
             select: select,
@@ -78,11 +78,11 @@ impl<'a, ST, QS, QS2, DB> ValidSubselect<QS2> for BoxedSelectStatement<'a, ST, Q
 {
 }
 
-impl<'a, ST, QS, DB> QueryFragment<DB> for BoxedSelectStatement<'a, ST, QS, DB>
+impl<'a, ST, QS, DB> QueryFragment for BoxedSelectStatement<'a, ST, QS, DB>
 where
     DB: Backend,
     QS: QuerySource,
-    QS::FromClause: QueryFragment<DB>,
+    QS::FromClause: QueryFragment,
 {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql("SELECT ");
@@ -104,7 +104,7 @@ where
     }
 }
 
-impl<'a, ST, DB> QueryFragment<DB> for BoxedSelectStatement<'a, ST, (), DB>
+impl<'a, ST, DB> QueryFragment for BoxedSelectStatement<'a, ST, (), DB>
 where
     DB: Backend,
 {
@@ -148,23 +148,23 @@ where
     }
 }
 
-impl<'a, ST, QS, DB> DistinctDsl for BoxedSelectStatement<'a, ST, QS, DB>
-where
-    DB: Backend,
-    DistinctClause: QueryFragment<DB>,
-{
-    type Output = Self;
+// impl<'a, ST, QS, DB> DistinctDsl for BoxedSelectStatement<'a, ST, QS, DB>
+// where
+//     DB: Backend,
+//     DistinctClause: QueryFragment,
+// {
+//     type Output = Self;
 
-    fn distinct(mut self) -> Self::Output {
-        self.distinct = Box::new(DistinctClause);
-        self
-    }
-}
+//     fn distinct(mut self) -> Self::Output {
+//         self.distinct = Box::new(DistinctClause);
+//         self
+//     }
+// }
 
 impl<'a, ST, QS, DB, Selection> SelectDsl<Selection> for BoxedSelectStatement<'a, ST, QS, DB>
 where
     DB: Backend,
-    Selection: SelectableExpression<QS> + QueryFragment<DB> + 'a,
+    Selection: SelectableExpression<QS> + QueryFragment + 'a,
 {
     type Output = BoxedSelectStatement<'a, Selection::SqlType, QS, DB>;
 
@@ -211,7 +211,7 @@ where
 impl<'a, ST, QS, DB> LimitDsl for BoxedSelectStatement<'a, ST, QS, DB>
 where
     DB: Backend,
-    LimitClause<AsExprOf<i64, BigInt>>: QueryFragment<DB>,
+    LimitClause<AsExprOf<i64, BigInt>>: QueryFragment,
 {
     type Output = Self;
 
@@ -224,7 +224,7 @@ where
 impl<'a, ST, QS, DB> OffsetDsl for BoxedSelectStatement<'a, ST, QS, DB>
 where
     DB: Backend,
-    OffsetClause<AsExprOf<i64, BigInt>>: QueryFragment<DB>,
+    OffsetClause<AsExprOf<i64, BigInt>>: QueryFragment,
 {
     type Output = Self;
 
@@ -237,7 +237,7 @@ where
 impl<'a, ST, QS, DB, Order> OrderDsl<Order> for BoxedSelectStatement<'a, ST, QS, DB>
 where
     DB: Backend,
-    Order: QueryFragment<DB> + AppearsOnTable<QS> + 'a,
+    Order: QueryFragment + AppearsOnTable<QS> + 'a,
 {
     type Output = Self;
 
@@ -250,7 +250,7 @@ where
 impl<'a, ST, QS, DB, Order> ThenOrderDsl<Order> for BoxedSelectStatement<'a, ST, QS, DB>
 where
     DB: Backend + 'a,
-    Order: QueryFragment<DB> + AppearsOnTable<QS> + 'a,
+    Order: QueryFragment + AppearsOnTable<QS> + 'a,
 {
     type Output = Self;
 
@@ -266,7 +266,7 @@ where
 impl<'a, ST, QS, DB, Expr> GroupByDsl<Expr> for BoxedSelectStatement<'a, ST, QS, DB>
 where
     DB: Backend,
-    Expr: QueryFragment<DB> + AppearsOnTable<QS> + 'a,
+    Expr: QueryFragment + AppearsOnTable<QS> + 'a,
     Self: Query,
 {
     type Output = Self;

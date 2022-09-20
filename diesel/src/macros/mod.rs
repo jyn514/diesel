@@ -19,9 +19,9 @@ macro_rules! __diesel_column {
             type SqlType = $($Type)*;
         }
 
-        impl<DB> $crate::query_builder::QueryFragment<DB> for $column_name where
+        impl<DB> $crate::query_builder::QueryFragment for $column_name where
             DB: $crate::backend::Backend,
-            <$table as QuerySource>::FromClause: QueryFragment<DB>,
+            <$table as QuerySource>::FromClause: QueryFragment,
         {
             fn walk_ast(&self, mut out: $crate::query_builder::AstPass) -> $crate::result::QueryResult<()> {
                 $table.from_clause().walk_ast(out.reborrow())?;
@@ -804,8 +804,8 @@ macro_rules! __diesel_table_impl {
                     type SqlType = ();
                 }
 
-                // impl<DB: Backend> QueryFragment<DB> for star where
-                //     <table as QuerySource>::FromClause: QueryFragment<DB>,
+                // impl<DB: Backend> QueryFragment for star where
+                //     <table as QuerySource>::FromClause: QueryFragment,
                 // {
                 //     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
                 //         table.from_clause().walk_ast(out.reborrow())?;

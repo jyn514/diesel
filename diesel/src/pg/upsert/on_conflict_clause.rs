@@ -38,11 +38,11 @@ where
     }
 }
 
-impl<Values, Target, Action> QueryFragment<Pg> for OnConflictValues<Values, Target, Action>
+impl<Values, Target, Action> QueryFragment for OnConflictValues<Values, Target, Action>
 where
-    Values: QueryFragment<Pg>,
-    Target: QueryFragment<Pg>,
-    Action: QueryFragment<Pg>,
+    Values: QueryFragment,
+    Target: QueryFragment,
+    Action: QueryFragment,
 {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         self.values.walk_ast(out.reborrow())?;

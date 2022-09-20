@@ -88,9 +88,9 @@ macro_rules! __diesel_operator_body {
         {
         }
 
-        // impl<$($ty_param,)+ $($backend_ty_param,)*> $crate::query_builder::QueryFragment<$backend_ty>
+        // impl<$($ty_param,)+ $($backend_ty_param,)*> $crate::query_builder::QueryFragment
         //     for $name<$($ty_param,)+> where
-        //         $($ty_param: $crate::query_builder::QueryFragment<$backend_ty>,)+
+        //         $($ty_param: $crate::query_builder::QueryFragment,)+
         //         $($backend_ty_param: $crate::backend::Backend,)*
         // {
         //     fn walk_ast(&self, mut out: $crate::query_builder::AstPass) -> $crate::result::QueryResult<()> {

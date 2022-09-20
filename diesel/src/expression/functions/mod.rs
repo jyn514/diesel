@@ -45,9 +45,9 @@ macro_rules! sql_function_body {
         }
 
         // #[allow(non_camel_case_types)]
-        // impl<$($arg_name),*, DB> $crate::query_builder::QueryFragment<DB> for $struct_name<$($arg_name),*> where
+        // impl<$($arg_name),*, DB> $crate::query_builder::QueryFragment for $struct_name<$($arg_name),*> where
         //     DB: $crate::backend::Backend,
-        //     for <'a> ($(&'a $arg_name),*): $crate::query_builder::QueryFragment<DB>,
+        //     for <'a> ($(&'a $arg_name),*): $crate::query_builder::QueryFragment,
         // {
         //     fn walk_ast(&self, mut out: $crate::query_builder::AstPass) -> $crate::result::QueryResult<()> {
         //         out.push_sql(concat!(stringify!($fn_name), "("));
@@ -239,11 +239,11 @@ macro_rules! __diesel_sql_function_body {
             }
 
             impl<$($type_args_bounds)* $($arg_name),*, DB>
-                $crate::query_builder::QueryFragment<DB>
+                $crate::query_builder::QueryFragment
                 for $fn_name<$($type_args,)* $($arg_name),*>
             where
                 DB: $crate::backend::Backend,
-                for<'a> ($(&'a $arg_name),*): $crate::query_builder::QueryFragment<DB>,
+                for<'a> ($(&'a $arg_name),*): $crate::query_builder::QueryFragment,
             {
                 fn walk_ast(&self, mut out: $crate::query_builder::AstPass) -> $crate::result::QueryResult<()> {
                     out.push_sql(concat!($sql_name, "("));
@@ -621,7 +621,7 @@ macro_rules! no_arg_sql_function_body {
     ($type_name:ident, $return_type:ty, $docs:expr, $($constraint:ident)::+) => {
         no_arg_sql_function_body_except_to_sql!($type_name, $return_type, $docs);
 
-        // impl<DB> $crate::query_builder::QueryFragment<DB> for $type_name where
+        // impl<DB> $crate::query_builder::QueryFragment for $type_name where
         //     DB: $crate::backend::Backend + $($constraint)::+,
         // {
         //     fn walk_ast(&self, mut out: $crate::query_builder::AstPass) -> $crate::result::QueryResult<()> {
@@ -634,7 +634,7 @@ macro_rules! no_arg_sql_function_body {
     ($type_name:ident, $return_type:ty, $docs:expr) => {
         no_arg_sql_function_body_except_to_sql!($type_name, $return_type, $docs);
 
-        impl<DB> $crate::query_builder::QueryFragment<DB> for $type_name where
+        impl<DB> $crate::query_builder::QueryFragment for $type_name where
             DB: $crate::backend::Backend,
         {
             fn walk_ast(&self, mut out: $crate::query_builder::AstPass) -> $crate::result::QueryResult<()> {

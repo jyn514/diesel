@@ -63,7 +63,7 @@ impl Expression for CountStar {
     type SqlType = BigInt;
 }
 
-impl<DB: Backend> QueryFragment<DB> for CountStar {
+impl<DB: Backend> QueryFragment for CountStar {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql("COUNT(*)");
         Ok(())

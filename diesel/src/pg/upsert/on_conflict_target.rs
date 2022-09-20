@@ -54,13 +54,13 @@ pub struct OnConstraint<'a> {
     constraint_name: &'a str,
 }
 
-pub trait OnConflictTarget<Table>: QueryFragment<Pg> {}
+pub trait OnConflictTarget<Table>: QueryFragment {}
 
 #[doc(hidden)]
 #[derive(Debug, Clone, Copy)]
 pub struct NoConflictTarget;
 
-impl QueryFragment<Pg> for NoConflictTarget {
+impl QueryFragment for NoConflictTarget {
     fn walk_ast(&self, _: AstPass) -> QueryResult<()> {
         Ok(())
     }
@@ -72,7 +72,7 @@ impl<Table> OnConflictTarget<Table> for NoConflictTarget {}
 #[derive(Debug, Clone, Copy)]
 pub struct ConflictTarget<T>(pub T);
 
-impl<T: Column> QueryFragment<Pg> for ConflictTarget<T> {
+impl<T: Column> QueryFragment for ConflictTarget<T> {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql(" (");
         out.push_identifier(T::NAME)?;
@@ -83,9 +83,9 @@ impl<T: Column> QueryFragment<Pg> for ConflictTarget<T> {
 
 impl<T: Column> OnConflictTarget<T::Table> for ConflictTarget<T> {}
 
-impl<ST> QueryFragment<Pg> for ConflictTarget<SqlLiteral<ST>>
+impl<ST> QueryFragment for ConflictTarget<SqlLiteral<ST>>
 where
-    SqlLiteral<ST>: QueryFragment<Pg>,
+    SqlLiteral<ST>: QueryFragment,
 {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql(" ");
@@ -95,11 +95,11 @@ where
 }
 
 impl<Tab, ST> OnConflictTarget<Tab> for ConflictTarget<SqlLiteral<ST>> where
-    ConflictTarget<SqlLiteral<ST>>: QueryFragment<Pg>
+    ConflictTarget<SqlLiteral<ST>>: QueryFragment
 {
 }
 
-impl<'a> QueryFragment<Pg> for ConflictTarget<OnConstraint<'a>> {
+impl<'a> QueryFragment for ConflictTarget<OnConstraint<'a>> {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql(" ON CONSTRAINT ");
         out.push_identifier(self.0.constraint_name)?;
@@ -111,7 +111,7 @@ impl<'a, Table> OnConflictTarget<Table> for ConflictTarget<OnConstraint<'a>> {}
 
 macro_rules! on_conflict_tuples {
     ($($col:ident),+) => {
-        impl<T, $($col),+> QueryFragment<Pg> for ConflictTarget<(T, $($col),+)> where
+        impl<T, $($col),+> QueryFragment for ConflictTarget<(T, $($col),+)> where
             T: Column,
             $($col: Column<Table=T::Table>,)+
         {

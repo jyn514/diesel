@@ -26,25 +26,25 @@ where
     type SelectClauseSqlType = <QS::DefaultSelection as Expression>::SqlType;
 }
 
-pub trait SelectClauseQueryFragment<QS, DB: Backend> {
+pub trait SelectClauseQueryFragment<QS> {
     fn walk_ast(&self, source: &QS, pass: AstPass) -> QueryResult<()>;
 }
 
-impl<T, QS, DB> SelectClauseQueryFragment<QS, DB> for SelectClause<T>
+impl<T, QS, DB> SelectClauseQueryFragment<QS> for SelectClause<T>
 where
     DB: Backend,
-    T: QueryFragment<DB>,
+    T: QueryFragment,
 {
     fn walk_ast(&self, _: &QS, pass: AstPass) -> QueryResult<()> {
         self.0.walk_ast(pass)
     }
 }
 
-impl<QS, DB> SelectClauseQueryFragment<QS, DB> for DefaultSelectClause
+impl<QS, DB> SelectClauseQueryFragment<QS> for DefaultSelectClause
 where
     DB: Backend,
     QS: QuerySource,
-    QS::DefaultSelection: QueryFragment<DB>,
+    QS::DefaultSelection: QueryFragment,
 {
     fn walk_ast(&self, source: &QS, pass: AstPass) -> QueryResult<()> {
         source.default_selection().walk_ast(pass)

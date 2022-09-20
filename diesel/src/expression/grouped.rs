@@ -10,7 +10,7 @@ impl<T: Expression> Expression for Grouped<T> {
     type SqlType = T::SqlType;
 }
 
-// impl<T: QueryFragment<DB>, DB: Backend> QueryFragment<DB> for Grouped<T> {
+// impl<T: QueryFragment, DB: Backend> QueryFragment for Grouped<T> {
 //     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
 //         out.push_sql("(");
 //         self.0.walk_ast(out.reborrow())?;

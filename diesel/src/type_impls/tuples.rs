@@ -8,7 +8,7 @@ use expression::{
 };
 use insertable::{Insertable};
 use query_builder::insert_statement::CanInsertInSingleQuery;
-pub trait InsertValues<T, DB>: QueryFragment<DB> {
+pub trait InsertValues<T, DB>: QueryFragment {
     fn column_names(&self, out: AstPass) -> QueryResult<()>;
 }
 
@@ -88,7 +88,7 @@ macro_rules! tuple_impls {
                 type SqlType = ($(<$T as Expression>::SqlType,)+);
             }
 
-            // impl<$($T: QueryFragment<__DB>),+, __DB: Backend> QueryFragment<__DB> for ($($T,)+) {
+            // impl<$($T: QueryFragment),+, __DB: Backend> QueryFragment for ($($T,)+) {
             //     #[allow(unused_assignments)]
             //     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
             //         let mut needs_comma = false;

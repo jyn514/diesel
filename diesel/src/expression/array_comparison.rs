@@ -55,11 +55,11 @@ impl<T, U> NonAggregate for In<T, U> where In<T, U>: Expression {}
 
 impl<T, U> NonAggregate for NotIn<T, U> where NotIn<T, U>: Expression {}
 
-impl<T, U, DB> QueryFragment<DB> for In<T, U>
+impl<T, U, DB> QueryFragment for In<T, U>
 where
     DB: Backend,
-    T: QueryFragment<DB>,
-    U: QueryFragment<DB> + MaybeEmpty,
+    T: QueryFragment,
+    U: QueryFragment + MaybeEmpty,
 {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         if self.values.is_empty() {
@@ -74,11 +74,11 @@ where
     }
 }
 
-impl<T, U, DB> QueryFragment<DB> for NotIn<T, U>
+impl<T, U, DB> QueryFragment for NotIn<T, U>
 where
     DB: Backend,
-    T: QueryFragment<DB>,
-    U: QueryFragment<DB> + MaybeEmpty,
+    T: QueryFragment,
+    U: QueryFragment + MaybeEmpty,
 {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         if self.values.is_empty() {
@@ -171,10 +171,10 @@ where
 {
 }
 
-impl<T, DB> QueryFragment<DB> for Many<T>
+impl<T, DB> QueryFragment for Many<T>
 where
     DB: Backend,
-    T: QueryFragment<DB>,
+    T: QueryFragment,
 {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.unsafe_to_cache_prepared();

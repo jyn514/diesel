@@ -3,34 +3,34 @@ use query_builder::locking_clause::{ForShare, ForUpdate, NoModifier, NoWait, Ski
 use query_builder::{AstPass, QueryFragment};
 use result::QueryResult;
 
-// impl QueryFragment<Mysql> for ForUpdate {
+// impl QueryFragment for ForUpdate {
 //     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
 //         out.push_sql(" FOR UPDATE");
 //         Ok(())
 //     }
 // }
 
-// impl QueryFragment<Mysql> for ForShare {
+// impl QueryFragment for ForShare {
 //     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
 //         out.push_sql(" FOR SHARE");
 //         Ok(())
 //     }
 // }
 
-// impl QueryFragment<Mysql> for NoModifier {
+// impl QueryFragment for NoModifier {
 //     fn walk_ast(&self, _out: AstPass) -> QueryResult<()> {
 //         Ok(())
 //     }
 // }
 
-// impl QueryFragment<Mysql> for SkipLocked {
+// impl QueryFragment for SkipLocked {
 //     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
 //         out.push_sql(" SKIP LOCKED");
 //         Ok(())
 //     }
 // }
 
-// impl QueryFragment<Mysql> for NoWait {
+// impl QueryFragment for NoWait {
 //     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
 //         out.push_sql(" NOWAIT");
 //         Ok(())

@@ -17,7 +17,7 @@ impl Expression for now {
 
 impl NonAggregate for now {}
 
-impl<DB: Backend> QueryFragment<DB> for now {
+impl<DB: Backend> QueryFragment for now {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql("CURRENT_TIMESTAMP");
         Ok(())

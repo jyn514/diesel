@@ -30,11 +30,11 @@ macro_rules! numeric_operation {
             type SqlType = <Lhs::SqlType as sql_types::ops::$name>::Output;
         }
 
-        // impl<Lhs, Rhs, DB> QueryFragment<DB> for $name<Lhs, Rhs>
+        // impl<Lhs, Rhs, DB> QueryFragment for $name<Lhs, Rhs>
         // where
         //     DB: Backend,
-        //     Lhs: QueryFragment<DB>,
-        //     Rhs: QueryFragment<DB>,
+        //     Lhs: QueryFragment,
+        //     Rhs: QueryFragment,
         // {
         //     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         //         out.push_sql("(");

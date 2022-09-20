@@ -132,9 +132,9 @@ __diesel_for_each_tuple!(tuple_impls);
 #[derive(Debug, Clone, Copy, QueryId)]
 pub struct PgTuple<T>(T);
 
-impl<T> QueryFragment<Pg> for PgTuple<T>
+impl<T> QueryFragment for PgTuple<T>
 where
-    T: QueryFragment<Pg>,
+    T: QueryFragment,
 {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql("(");

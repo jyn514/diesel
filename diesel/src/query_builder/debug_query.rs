@@ -33,7 +33,7 @@ impl<'a, T, DB> Display for DebugQuery<'a, T, DB>
 where
     DB: Backend,
     DB::QueryBuilder: Default,
-    T: QueryFragment<DB>,
+    T: QueryFragment,
 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut query_builder = DB::QueryBuilder::default();
@@ -47,7 +47,7 @@ impl<'a, T, DB> Debug for DebugQuery<'a, T, DB>
 where
     DB: Backend,
     DB::QueryBuilder: Default,
-    T: QueryFragment<DB>,
+    T: QueryFragment,
 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut query_builder = DB::QueryBuilder::default();
@@ -79,7 +79,7 @@ impl<'a, T, DB> DebugBinds<'a, T, DB> {
 impl<'a, T, DB> Debug for DebugBinds<'a, T, DB>
 where
     DB: Backend,
-    T: QueryFragment<DB>,
+    T: QueryFragment,
 {
     // Clippy is wrong, this cannot be expressed with pointer casting
     #[allow(clippy::transmute_ptr_to_ptr)]

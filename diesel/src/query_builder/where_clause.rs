@@ -31,7 +31,7 @@ pub trait WhereOr<Predicate> {
 #[derive(Debug, Clone, Copy, QueryId)]
 pub struct NoWhereClause;
 
-impl<DB: Backend> QueryFragment<DB> for NoWhereClause {
+impl<DB: Backend> QueryFragment for NoWhereClause {
     fn walk_ast(&self, _: AstPass) -> QueryResult<()> {
         Ok(())
     }
@@ -69,10 +69,10 @@ impl<DB> Into<BoxedWhereClause<'static, DB>> for NoWhereClause {
 #[derive(Debug, Clone, Copy, QueryId)]
 pub struct WhereClause<Expr>(Expr);
 
-impl<DB, Expr> QueryFragment<DB> for WhereClause<Expr>
+impl<DB, Expr> QueryFragment for WhereClause<Expr>
 where
     DB: Backend,
-    Expr: QueryFragment<DB>,
+    Expr: QueryFragment,
 {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql(" WHERE ");
@@ -108,7 +108,7 @@ where
 impl<'a, DB, Predicate> Into<BoxedWhereClause<'a, DB>> for WhereClause<Predicate>
 where
     DB: Backend,
-    Predicate: QueryFragment<DB> + 'a,
+    Predicate: QueryFragment + 'a,
 {
     fn into(self) -> BoxedWhereClause<'a, DB> {
         BoxedWhereClause::Where(Box::new(self.0))
@@ -125,11 +125,11 @@ impl<QS, Expr> ValidWhereClause<QS> for WhereClause<Expr> where Expr: AppearsOnT
 
 #[allow(missing_debug_implementations)] // We can't...
 pub enum BoxedWhereClause<'a, DB> {
-    Where(Box<dyn QueryFragment<DB> + 'a>),
+    Where(Box<dyn QueryFragment + 'a>),
     None,
 }
 
-impl<'a, DB> QueryFragment<DB> for BoxedWhereClause<'a, DB>
+impl<'a, DB> QueryFragment for BoxedWhereClause<'a, DB>
 where
     DB: Backend,
 {
@@ -153,7 +153,7 @@ impl<'a, DB> QueryId for BoxedWhereClause<'a, DB> {
 impl<'a, DB, Predicate> WhereAnd<Predicate> for BoxedWhereClause<'a, DB>
 where
     DB: Backend + 'a,
-    Predicate: QueryFragment<DB> + 'a,
+    Predicate: QueryFragment + 'a,
 {
     type Output = Self;
 
@@ -170,7 +170,7 @@ where
 impl<'a, DB, Predicate> WhereOr<Predicate> for BoxedWhereClause<'a, DB>
 where
     DB: Backend + 'a,
-    Predicate: QueryFragment<DB> + 'a,
+    Predicate: QueryFragment + 'a,
 {
     type Output = Self;
 

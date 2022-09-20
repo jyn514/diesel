@@ -5,48 +5,48 @@ use query_builder::locking_clause::{
 use query_builder::{AstPass, QueryFragment};
 use result::QueryResult;
 
-impl QueryFragment<Pg> for ForUpdate {
+impl QueryFragment for ForUpdate {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql(" FOR UPDATE");
         Ok(())
     }
 }
 
-impl QueryFragment<Pg> for ForNoKeyUpdate {
+impl QueryFragment for ForNoKeyUpdate {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql(" FOR NO KEY UPDATE");
         Ok(())
     }
 }
 
-impl QueryFragment<Pg> for ForShare {
+impl QueryFragment for ForShare {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql(" FOR SHARE");
         Ok(())
     }
 }
 
-impl QueryFragment<Pg> for ForKeyShare {
+impl QueryFragment for ForKeyShare {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql(" FOR KEY SHARE");
         Ok(())
     }
 }
 
-impl QueryFragment<Pg> for NoModifier {
+impl QueryFragment for NoModifier {
     fn walk_ast(&self, _out: AstPass) -> QueryResult<()> {
         Ok(())
     }
 }
 
-impl QueryFragment<Pg> for SkipLocked {
+impl QueryFragment for SkipLocked {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql(" SKIP LOCKED");
         Ok(())
     }
 }
 
-impl QueryFragment<Pg> for NoWait {
+impl QueryFragment for NoWait {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql(" NOWAIT");
         Ok(())

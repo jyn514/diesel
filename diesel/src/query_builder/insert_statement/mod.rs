@@ -173,14 +173,14 @@ impl<T, U, C, Op, Ret> InsertStatement<T, InsertFromSelect<U, C>, Op, Ret> {
     }
 }
 
-// impl<T, U, Op, Ret, DB> QueryFragment<DB> for InsertStatement<T, U, Op, Ret>
+// impl<T, U, Op, Ret, DB> QueryFragment for InsertStatement<T, U, Op, Ret>
 // where
 //     DB: Backend,
 //     T: Table,
-//     T::FromClause: QueryFragment<DB>,
-//     U: QueryFragment<DB> + CanInsertInSingleQuery<DB>,
-//     Op: QueryFragment<DB>,
-//     Ret: QueryFragment<DB>,
+//     T::FromClause: QueryFragment,
+//     U: QueryFragment + CanInsertInSingleQuery<DB>,
+//     Op: QueryFragment,
+//     Ret: QueryFragment,
 // {
 //     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
 //         out.unsafe_to_cache_prepared();
@@ -206,7 +206,7 @@ impl<T, U, C, Op, Ret> InsertStatement<T, InsertFromSelect<U, C>, Op, Ret> {
 impl<'a, T, U, Op> ExecuteDsl<SqliteConnection> for InsertStatement<T, &'a [U], Op>
 where
     &'a U: Insertable<T>,
-    InsertStatement<T, <&'a U as Insertable<T>>::Values, Op>: QueryFragment<Sqlite>,
+    InsertStatement<T, <&'a U as Insertable<T>>::Values, Op>: QueryFragment,
     T: Copy,
     Op: Copy,
 {
@@ -248,7 +248,7 @@ where
 // impl<T, U, Op> ExecuteDsl<SqliteConnection>
 //     for InsertStatement<T, OwnedBatchInsert<ValuesClause<U, T>, T>, Op>
 // where
-//     InsertStatement<T, ValuesClause<U, T>, Op>: QueryFragment<Sqlite>,
+//     InsertStatement<T, ValuesClause<U, T>, Op>: QueryFragment,
 //     T: Copy,
 //     Op: Copy,
 // {
@@ -334,7 +334,7 @@ impl<T, U, Op> InsertStatement<T, U, Op> {
 #[doc(hidden)]
 pub struct Insert;
 
-// impl<DB: Backend> QueryFragment<DB> for Insert {
+// impl<DB: Backend> QueryFragment for Insert {
 //     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
 //         out.push_sql("INSERT");
 //         Ok(())
@@ -346,7 +346,7 @@ pub struct Insert;
 pub struct InsertOrIgnore;
 
 #[cfg(feature = "sqlite")]
-impl QueryFragment<Sqlite> for InsertOrIgnore {
+impl QueryFragment for InsertOrIgnore {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql("INSERT OR IGNORE");
         Ok(())
@@ -354,7 +354,7 @@ impl QueryFragment<Sqlite> for InsertOrIgnore {
 }
 
 #[cfg(feature = "mysql")]
-impl QueryFragment<Mysql> for InsertOrIgnore {
+impl QueryFragment for InsertOrIgnore {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql("INSERT IGNORE");
         Ok(())
@@ -366,7 +366,7 @@ impl QueryFragment<Mysql> for InsertOrIgnore {
 pub struct Replace;
 
 #[cfg(feature = "sqlite")]
-impl QueryFragment<Sqlite> for Replace {
+impl QueryFragment for Replace {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql("REPLACE");
         Ok(())
@@ -374,7 +374,7 @@ impl QueryFragment<Sqlite> for Replace {
 }
 
 #[cfg(feature = "mysql")]
-impl QueryFragment<Mysql> for Replace {
+impl QueryFragment for Replace {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql("REPLACE");
         Ok(())
@@ -440,7 +440,7 @@ impl<'a, Tab> Insertable<Tab> for &'a DefaultValues {
     }
 }
 
-// impl<DB> QueryFragment<DB> for DefaultValues
+// impl<DB> QueryFragment for DefaultValues
 // where
 //     DB: Backend + Any,
 // {
@@ -507,12 +507,12 @@ where
 }
 
 
-// impl<T, Tab, DB> QueryFragment<DB> for ValuesClause<T, Tab>
+// impl<T, Tab, DB> QueryFragment for ValuesClause<T, Tab>
 // where
 //     DB: Backend,
 //     Tab: Table,
 //     T: InsertValues<Tab, DB>,
-//     DefaultValues: QueryFragment<DB>,
+//     DefaultValues: QueryFragment,
 // {
 //     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
 //         if self.values.is_noop()? {

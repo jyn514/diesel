@@ -8,9 +8,9 @@ use result::QueryResult;
 #[derive(Debug, Clone, Copy, QueryId)]
 pub struct DistinctOnClause<T>(pub(crate) T);
 
-impl<T> QueryFragment<Pg> for DistinctOnClause<T>
+impl<T> QueryFragment for DistinctOnClause<T>
 where
-    T: QueryFragment<Pg>,
+    T: QueryFragment,
 {
     fn walk_ast(&self, mut out: AstPass) -> QueryResult<()> {
         out.push_sql("DISTINCT ON (");
