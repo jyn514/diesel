@@ -146,9 +146,9 @@ pub trait QueryFragment<DB: Backend> {
     /// Converts this `QueryFragment` to its SQL representation.
     ///
     /// This method should only be called by implementations of `Connection`.
-    fn to_sql(&self, out: &mut DB::QueryBuilder) -> QueryResult<()> {
-        self.walk_ast(AstPass::to_sql(out))
-    }
+    // fn to_sql(&self, out: &mut DB::QueryBuilder) -> QueryResult<()> {
+    //     self.walk_ast(AstPass::to_sql(out))
+    // }
 
     /// Serializes all bind parameters in this query.
     ///
@@ -156,13 +156,13 @@ pub trait QueryFragment<DB: Backend> {
     /// itself. It is represented in SQL with a placeholder such as `?` or `$1`.
     ///
     /// This method should only be called by implementations of `Connection`.
-    fn collect_binds(
-        &self,
-        out: &mut DB::BindCollector,
-        metadata_lookup: &DB::MetadataLookup,
-    ) -> QueryResult<()> {
-        self.walk_ast(AstPass::collect_binds(out, metadata_lookup))
-    }
+    // fn collect_binds(
+    //     &self,
+    //     out: &mut DB::BindCollector,
+    //     metadata_lookup: &DB::MetadataLookup,
+    // ) -> QueryResult<()> {
+    //     self.walk_ast(AstPass::collect_binds(out, metadata_lookup))
+    // }
 
     /// Is this query safe to store in the prepared statement cache?
     ///
@@ -179,18 +179,18 @@ pub trait QueryFragment<DB: Backend> {
     ///   placeholder)
     ///
     /// This method should only be called by implementations of `Connection`.
-    fn is_safe_to_cache_prepared(&self) -> QueryResult<bool> {
-        let mut result = true;
-        self.walk_ast(AstPass::is_safe_to_cache_prepared(&mut result))?;
-        Ok(result)
-    }
+    // fn is_safe_to_cache_prepared(&self) -> QueryResult<bool> {
+    //     let mut result = true;
+    //     self.walk_ast(AstPass::is_safe_to_cache_prepared(&mut result))?;
+    //     Ok(result)
+    // }
 
-    #[doc(hidden)]
+    // #[doc(hidden)]
     /// Does walking this AST have any effect?
     fn is_noop(&self) -> QueryResult<bool> {
-        let mut result = true;
-        self.walk_ast(AstPass::is_noop(&mut result))?;
-        Ok(result)
+        // let mut result = true;
+        // self.walk_ast(AstPass::is_noop(&mut result))?;
+        // Ok(result)
     }
 }
 

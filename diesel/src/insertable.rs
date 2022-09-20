@@ -4,11 +4,6 @@ use query_builder::{
 };
 use result::QueryResult;
 
-pub struct ValuesClause<T, Tab> {
-    pub(crate) values: T,
-    _marker: PhantomData<Tab>,
-}
-
 // trait QueryFragment<DB: Backend> {
 //     /// Walk over this `QueryFragment` for all passes.
 //     ///
@@ -147,12 +142,15 @@ pub trait Insertable<T> {
 // pub enum Error {}
 // type QueryResult<T> = Result<T, Error>;
 
-pub use self::reproduce::AstPass;
+pub struct ValuesClause{}
+pub use self::reproduce::{AstPass};
 
 mod reproduce {
     // use super::{QueryFragment, QueryResult, ValuesClause, AstPass};
     // use super::{QueryFragment, QueryResult, ValuesClause, Backend};
-    use super::{QueryResult, ValuesClause, QueryFragment, Backend};
+    use super::{QueryResult, QueryFragment, Backend};
+
+    // pub struct ValuesClause<T, Tab> {
 
     pub struct AstPass<'a, DB>
     {
@@ -190,7 +188,7 @@ mod reproduce {
 
     impl<'a, T, DB> QueryFragment<DB> for BatchInsert
     where
-        &'a T: Insertable<Values = ValuesClause<(), ()>>,
+        &'a T: Insertable<Values = ()>,
     {
         fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
         }
