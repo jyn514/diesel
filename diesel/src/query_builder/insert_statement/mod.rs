@@ -393,7 +393,7 @@ impl<'a, T, Tab> UndecoratedInsertRecord<Tab> for &'a T where
 {
 }
 
-impl<T, U> UndecoratedInsertRecord<T::Table> for ColumnInsertValue<T, U> where T: Column {}
+// impl<T, U> UndecoratedInsertRecord<T::Table> for ColumnInsertValue<T, U> where T: Column {}
 
 impl<T, Table> UndecoratedInsertRecord<Table> for [T] where T: UndecoratedInsertRecord<Table> {}
 
@@ -402,10 +402,10 @@ impl<T, Table> UndecoratedInsertRecord<Table> for [T] where T: UndecoratedInsert
 // {
 // }
 
-impl<T, Table> UndecoratedInsertRecord<Table> for OwnedBatchInsert<T, Table> where
-    T: UndecoratedInsertRecord<Table>
-{
-}
+// impl<T, Table> UndecoratedInsertRecord<Table> for OwnedBatchInsert<T, Table> where
+//     T: UndecoratedInsertRecord<Table>
+// {
+// }
 
 impl<T, Table> UndecoratedInsertRecord<Table> for Vec<T> where [T]: UndecoratedInsertRecord<Table> {}
 

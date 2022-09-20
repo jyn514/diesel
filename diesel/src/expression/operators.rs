@@ -358,7 +358,8 @@ diesel_postfix_operator!(Desc, " DESC", ());
 
 diesel_prefix_operator!(Not, "NOT ");
 
-use insertable::{ColumnInsertValue, Insertable};
+// use insertable::{ColumnInsertValue, Insertable};
+use insertable::Insertable;
 use query_builder::ValuesClause;
 use query_source::Column;
 
