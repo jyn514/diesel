@@ -6,7 +6,12 @@ use deserialize::{self, FromSqlRow, Queryable, QueryableByName};
 use expression::{
     AppearsOnTable, AsExpression, AsExpressionList, Expression, NonAggregate, SelectableExpression,
 };
-use insertable::{CanInsertInSingleQuery, InsertValues, Insertable};
+use insertable::{Insertable};
+use query_builder::insert_statement::CanInsertInSingleQuery;
+pub trait InsertValues<T, DB>: QueryFragment<DB> {
+    fn column_names(&self, out: AstPass<DB>) -> QueryResult<()>;
+}
+
 use query_builder::*;
 use query_source::*;
 use result::QueryResult;

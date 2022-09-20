@@ -493,23 +493,36 @@ where
     }
 }
 
-impl<T, Tab, DB> QueryFragment<DB> for ValuesClause<T, Tab>
+pub trait CanInsertInSingleQuery<DB> {
+    fn rows_to_insert(&self) -> Option<usize>;
+}
+
+impl<'a, T, DB> CanInsertInSingleQuery<DB> for &'a T
 where
-    DB: Backend,
-    Tab: Table,
-    T: InsertValues<Tab, DB>,
-    DefaultValues: QueryFragment<DB>,
+    T: ?Sized + CanInsertInSingleQuery<DB>,
 {
-    fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
-        if self.values.is_noop()? {
-            DefaultValues.walk_ast(out)?;
-        } else {
-            out.push_sql("(");
-            self.values.column_names(out.reborrow())?;
-            out.push_sql(") VALUES (");
-            self.values.walk_ast(out.reborrow())?;
-            out.push_sql(")");
-        }
-        Ok(())
+    fn rows_to_insert(&self) -> Option<usize> {
     }
 }
+
+
+// impl<T, Tab, DB> QueryFragment<DB> for ValuesClause<T, Tab>
+// where
+//     DB: Backend,
+//     Tab: Table,
+//     T: InsertValues<Tab, DB>,
+//     DefaultValues: QueryFragment<DB>,
+// {
+//     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+//         if self.values.is_noop()? {
+//             DefaultValues.walk_ast(out)?;
+//         } else {
+//             out.push_sql("(");
+//             self.values.column_names(out.reborrow())?;
+//             out.push_sql(") VALUES (");
+//             self.values.walk_ast(out.reborrow())?;
+//             out.push_sql(")");
+//         }
+//         Ok(())
+//     }
+// }

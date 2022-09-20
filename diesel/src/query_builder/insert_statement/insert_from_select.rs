@@ -34,14 +34,14 @@ impl<Select, Columns> InsertFromSelect<Select, Columns> {
     }
 }
 
-impl<DB, Select, Columns> CanInsertInSingleQuery<DB> for InsertFromSelect<Select, Columns>
-where
-    DB: Backend,
-{
-    fn rows_to_insert(&self) -> Option<usize> {
-        None
-    }
-}
+// impl<DB, Select, Columns> CanInsertInSingleQuery<DB> for InsertFromSelect<Select, Columns>
+// where
+//     DB: Backend,
+// {
+//     fn rows_to_insert(&self) -> Option<usize> {
+//         None
+//     }
+// }
 
 impl<DB, Select, Columns> QueryFragment<DB> for InsertFromSelect<Select, Columns>
 where

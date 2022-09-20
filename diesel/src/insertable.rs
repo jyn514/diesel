@@ -17,24 +17,6 @@ pub trait Insertable<T> {
     }
 }
 
-pub trait CanInsertInSingleQuery<DB> {
-    fn rows_to_insert(&self) -> Option<usize>;
-}
-
-impl<'a, T, DB> CanInsertInSingleQuery<DB> for &'a T
-where
-    T: ?Sized + CanInsertInSingleQuery<DB>,
-{
-    fn rows_to_insert(&self) -> Option<usize> {
-        (*self).rows_to_insert()
-    }
-}
-
-pub trait InsertValues<T, DB>: QueryFragment<DB> {
-    fn column_names(&self, out: AstPass<DB>) -> QueryResult<()>;
-}
-
-
 impl<T, Tab> Insertable<Tab> for Option<T>
 where
     T: Insertable<Tab>,

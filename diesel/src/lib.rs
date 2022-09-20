@@ -28,6 +28,7 @@ pub mod expression;
 pub mod expression_methods;
 // // #[doc(hidden)]
 pub mod insertable;
+pub use self::type_impls::InsertValues;
 pub mod query_builder;
 pub mod query_dsl;
 pub mod query_source;
