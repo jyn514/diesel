@@ -27,62 +27,14 @@ use sqlite::Sqlite;
 /// example, an enum that maps to a label and a value column). Add
 /// `#[diesel(embed)]` to any such fields.
 pub trait Insertable<T> {
-    /// The `VALUES` clause to insert these records
-    ///
-    /// The types used here are generally internal to Diesel.
-    /// Implementations of this trait should use the `Values`
-    /// type of other `Insertable` types.
-    /// For example `<diesel::dsl::Eq<column, &str> as Insertable<table>>::Values`.
     type Values;
 
-    /// Construct `Self::Values`
-    ///
-    /// Implementations of this trait typically call `.values`
-    /// on other `Insertable` types.
     fn values(self) -> Self::Values;
 
-    /// Insert `self` into a given table.
-    ///
-    /// `foo.insert_into(table)` is identical to `insert_into(table).values(foo)`.
-    /// However, when inserting from a select statement,
-    /// this form is generally preferred.
-    ///
-    /// # Example
-    ///
-    /// ```rust
-    /// # #[macro_use] extern crate diesel;
-    /// # include!("doctest_setup.rs");
-    /// #
-    /// # fn main() {
-    /// #     run_test().unwrap();
-    /// # }
-    /// #
-    /// # fn run_test() -> QueryResult<()> {
-    /// #     use schema::{posts, users};
-    /// #     let conn = establish_connection();
-    /// #     diesel::delete(posts::table).execute(&conn)?;
-    /// users::table
-    ///     .select((
-    ///         users::name.concat("'s First Post"),
-    ///         users::id,
-    ///     ))
-    ///     .insert_into(posts::table)
-    ///     .into_columns((posts::title, posts::user_id))
-    ///     .execute(&conn)?;
-    ///
-    /// let inserted_posts = posts::table
-    ///     .select(posts::title)
-    ///     .load::<String>(&conn)?;
-    /// let expected = vec!["Sean's First Post", "Tess's First Post"];
-    /// assert_eq!(expected, inserted_posts);
-    /// #     Ok(())
-    /// # }
-    /// ```
     fn insert_into(self, table: T) -> InsertStatement<T, Self::Values>
     where
         Self: Sized,
     {
-        ::insert_into(table).values(self)
     }
 }
 
@@ -104,14 +56,14 @@ where
     }
 }
 
-impl<'a, T, Tab, DB> CanInsertInSingleQuery<DB> for BatchInsert<'a, T, Tab>
-where
-    DB: Backend + SupportsDefaultKeyword,
-{
-    fn rows_to_insert(&self) -> Option<usize> {
-        Some(self.records.len())
-    }
-}
+// impl<'a, T, Tab, DB> CanInsertInSingleQuery<DB> for BatchInsert<'a, T, Tab>
+// where
+//     DB: Backend + SupportsDefaultKeyword,
+// {
+//     fn rows_to_insert(&self) -> Option<usize> {
+//         Some(self.records.len())
+//     }
+// }
 
 impl<T, Table, DB> CanInsertInSingleQuery<DB> for OwnedBatchInsert<T, Table>
 where
@@ -204,19 +156,19 @@ where
     }
 }
 
-impl<'a, T, Tab> Insertable<Tab> for &'a [T]
-where
-    &'a T: UndecoratedInsertRecord<Tab>,
-{
-    type Values = BatchInsert<'a, T, Tab>;
+// impl<'a, T, Tab> Insertable<Tab> for &'a [T]
+// where
+//     &'a T: UndecoratedInsertRecord<Tab>,
+// {
+//     type Values = BatchInsert<'a, T, Tab>;
 
-    fn values(self) -> Self::Values {
-        BatchInsert {
-            records: self,
-            _marker: PhantomData,
-        }
-    }
-}
+//     fn values(self) -> Self::Values {
+//         BatchInsert {
+//             records: self,
+//             _marker: PhantomData,
+//         }
+//     }
+// }
 
 impl<'a, T, Tab> Insertable<Tab> for &'a Vec<T>
 where
@@ -246,12 +198,12 @@ where
 impl<T, Tab> Insertable<Tab> for Option<T>
 where
     T: Insertable<Tab>,
-    T::Values: Default,
+    // T::Values: Default,
 {
     type Values = T::Values;
 
     fn values(self) -> Self::Values {
-        self.map(Insertable::values).unwrap_or_default()
+        // self.map(Insertable::values).unwrap_or_default()
     }
 }
 
@@ -267,28 +219,19 @@ where
 }
 
 #[derive(Debug, Clone, Copy)]
-pub struct BatchInsert<'a, T: 'a, Tab> {
-    pub(crate) records: &'a [T],
-    _marker: PhantomData<Tab>,
+pub struct BatchInsert {
+    // pub(crate) records: &'a [T],
+    // _marker: PhantomData<Tab>,
 }
 
-impl<'a, T, Tab, Inner, DB> QueryFragment<DB> for BatchInsert<'a, T, Tab>
+impl<'a, T, Tab, Inner, DB> QueryFragment<DB> for BatchInsert
 where
-    DB: Backend + SupportsDefaultKeyword,
+    // DB: Backend + SupportsDefaultKeyword,
     &'a T: Insertable<Tab, Values = ValuesClause<Inner, Tab>>,
-    ValuesClause<Inner, Tab>: QueryFragment<DB>,
-    Inner: QueryFragment<DB>,
+    // ValuesClause<Inner, Tab>: QueryFragment<DB>,
+    // Inner: QueryFragment<DB>,
 {
     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
-        let mut records = self.records.iter().map(Insertable::values);
-        if let Some(record) = records.next() {
-            record.walk_ast(out.reborrow())?;
-        }
-        for record in records {
-            out.push_sql(", (");
-            record.values.walk_ast(out.reborrow())?;
-            out.push_sql(")");
-        }
         Ok(())
     }
 }

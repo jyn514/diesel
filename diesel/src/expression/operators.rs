@@ -362,16 +362,16 @@ use insertable::{ColumnInsertValue, Insertable};
 use query_builder::ValuesClause;
 use query_source::Column;
 
-impl<T, U> Insertable<T::Table> for Eq<T, U>
-where
-    T: Column,
-{
-    type Values = ValuesClause<ColumnInsertValue<T, U>, T::Table>;
+// impl<T, U> Insertable<T::Table> for Eq<T, U>
+// where
+//     T: Column,
+// {
+//     type Values = ValuesClause<ColumnInsertValue<T, U>, T::Table>;
 
-    fn values(self) -> Self::Values {
-        ValuesClause::new(ColumnInsertValue::Expression(self.left, self.right))
-    }
-}
+//     fn values(self) -> Self::Values {
+//         ValuesClause::new(ColumnInsertValue::Expression(self.left, self.right))
+//     }
+// }
 
 impl<'a, T, Tab, U> Insertable<Tab> for &'a Eq<T, U>
 where
@@ -381,6 +381,6 @@ where
     type Values = <Eq<T, &'a U> as Insertable<Tab>>::Values;
 
     fn values(self) -> Self::Values {
-        Eq::new(self.left, &self.right).values()
+        // Eq::new(self.left, &self.right).values()
     }
 }
