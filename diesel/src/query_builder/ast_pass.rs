@@ -21,15 +21,16 @@ use sql_types::HasSqlType;
 /// you to find out what the current pass is. You should simply call the
 /// relevant methods and trust that they will be a no-op if they're not relevant
 /// to the current pass.
-pub struct AstPass<'a, DB>
-where
-    DB: Backend,
-    DB::QueryBuilder: 'a,
-    DB::BindCollector: 'a,
-    DB::MetadataLookup: 'a,
-{
-    internals: AstPassInternals<'a, DB>,
-}
+pub use crate::insertable::AstPass;
+// pub struct AstPass<'a, DB>
+// where
+//     DB: Backend,
+//     DB::QueryBuilder: 'a,
+//     DB::BindCollector: 'a,
+//     DB::MetadataLookup: 'a,
+// {
+//     internals: AstPassInternals<'a, DB>,
+// }
 
 impl<'a, DB> AstPass<'a, DB>
 where
