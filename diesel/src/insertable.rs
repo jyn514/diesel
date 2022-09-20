@@ -1,6 +1,5 @@
 use query_builder::{
     // AstPass, InsertStatement, QueryFragment, ValuesClause,
-    InsertStatement,
 };
 use result::QueryResult;
 
@@ -17,54 +16,23 @@ pub trait Insertable<T> {
     }
 }
 
+pub struct NoReturningClause;
+pub struct InsertStatement<T, U, Op = (), Ret = ()> {
+    operator: Op,
+    target: T,
+    records: U,
+    returning: Ret,
+}
 // pub enum Error {}
 // type QueryResult<T> = Result<T, Error>;
 
 pub struct ValuesClause{}
 pub use self::reproduce::{AstPass};
 
-pub trait QueryFragment<DB: Backend> {
+pub trait QueryFragment<DB> {
     fn walk_ast(&self, pass: AstPass<DB>) -> QueryResult<()>;
 }
 
-impl<T: ?Sized, DB> QueryFragment<DB> for Box<T>
-where
-    DB: Backend,
-    T: QueryFragment<DB>,
-{
-    fn walk_ast(&self, pass: AstPass<DB>) -> QueryResult<()> {
-        QueryFragment::walk_ast(&**self, pass)
-    }
-}
-
-impl<'a, T: ?Sized, DB> QueryFragment<DB> for &'a T
-where
-    DB: Backend,
-    T: QueryFragment<DB>,
-{
-    fn walk_ast(&self, pass: AstPass<DB>) -> QueryResult<()> {
-        QueryFragment::walk_ast(&**self, pass)
-    }
-}
-
-impl<DB: Backend> QueryFragment<DB> for () {
-    fn walk_ast(&self, _: AstPass<DB>) -> QueryResult<()> {
-        Ok(())
-    }
-}
-
-impl<T, DB> QueryFragment<DB> for Option<T>
-where
-    DB: Backend,
-    T: QueryFragment<DB>,
-{
-    fn walk_ast(&self, out: AstPass<DB>) -> QueryResult<()> {
-        match *self {
-            Some(ref c) => c.walk_ast(out),
-            None => Ok(()),
-        }
-    }
-}
 
 mod reproduce {
     // use super::{QueryFragment, QueryResult, ValuesClause, AstPass};

@@ -109,8 +109,8 @@ impl<T, Op> IncompleteInsertStatement<T, Op> {
     }
 }
 
-#[derive(Debug, Copy, Clone)]
-#[must_use = "Queries are only executed when calling `load`, `get_result` or similar."]
+// #[derive(Debug, Copy, Clone)]
+// #[must_use = "Queries are only executed when calling `load`, `get_result` or similar."]
 /// A fully constructed insert statement.
 ///
 /// The parameters of this struct represent:
@@ -123,12 +123,13 @@ impl<T, Op> IncompleteInsertStatement<T, Op> {
 /// - `Ret`: The `RETURNING` clause of the query. The specific types used to
 ///   represent this are private. You can safely rely on the default type
 ///   representing a query without a `RETURNING` clause.
-pub struct InsertStatement<T, U, Op = Insert, Ret = NoReturningClause> {
-    operator: Op,
-    target: T,
-    records: U,
-    returning: Ret,
-}
+// pub struct InsertStatement<T, U, Op = Insert, Ret = NoReturningClause> {
+//     operator: Op,
+//     target: T,
+//     records: U,
+//     returning: Ret,
+// }
+pub use crate::insertable::InsertStatement;
 
 impl<T, U, Op, Ret> InsertStatement<T, U, Op, Ret> {
     fn new(target: T, records: U, operator: Op, returning: Ret) -> Self {
