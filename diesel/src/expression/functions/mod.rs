@@ -44,19 +44,19 @@ macro_rules! sql_function_body {
             type SqlType = $return_type;
         }
 
-        #[allow(non_camel_case_types)]
-        impl<$($arg_name),*, DB> $crate::query_builder::QueryFragment<DB> for $struct_name<$($arg_name),*> where
-            DB: $crate::backend::Backend,
-            for <'a> ($(&'a $arg_name),*): $crate::query_builder::QueryFragment<DB>,
-        {
-            fn walk_ast(&self, mut out: $crate::query_builder::AstPass<DB>) -> $crate::result::QueryResult<()> {
-                out.push_sql(concat!(stringify!($fn_name), "("));
-                $crate::query_builder::QueryFragment::walk_ast(
-                    &($(&self.$arg_name),*), out.reborrow())?;
-                out.push_sql(")");
-                Ok(())
-            }
-        }
+        // #[allow(non_camel_case_types)]
+        // impl<$($arg_name),*, DB> $crate::query_builder::QueryFragment<DB> for $struct_name<$($arg_name),*> where
+        //     DB: $crate::backend::Backend,
+        //     for <'a> ($(&'a $arg_name),*): $crate::query_builder::QueryFragment<DB>,
+        // {
+        //     fn walk_ast(&self, mut out: $crate::query_builder::AstPass<DB>) -> $crate::result::QueryResult<()> {
+        //         out.push_sql(concat!(stringify!($fn_name), "("));
+        //         $crate::query_builder::QueryFragment::walk_ast(
+        //             &($(&self.$arg_name),*), out.reborrow())?;
+        //         out.push_sql(")");
+        //         Ok(())
+        //     }
+        // }
 
         #[allow(non_camel_case_types)]
         impl<$($arg_name),*, QS> $crate::expression::SelectableExpression<QS> for $struct_name<$($arg_name),*> where
@@ -621,14 +621,14 @@ macro_rules! no_arg_sql_function_body {
     ($type_name:ident, $return_type:ty, $docs:expr, $($constraint:ident)::+) => {
         no_arg_sql_function_body_except_to_sql!($type_name, $return_type, $docs);
 
-        impl<DB> $crate::query_builder::QueryFragment<DB> for $type_name where
-            DB: $crate::backend::Backend + $($constraint)::+,
-        {
-            fn walk_ast(&self, mut out: $crate::query_builder::AstPass<DB>) -> $crate::result::QueryResult<()> {
-                out.push_sql(concat!(stringify!($type_name), "()"));
-                Ok(())
-            }
-        }
+        // impl<DB> $crate::query_builder::QueryFragment<DB> for $type_name where
+        //     DB: $crate::backend::Backend + $($constraint)::+,
+        // {
+        //     fn walk_ast(&self, mut out: $crate::query_builder::AstPass<DB>) -> $crate::result::QueryResult<()> {
+        //         out.push_sql(concat!(stringify!($type_name), "()"));
+        //         Ok(())
+        //     }
+        // }
     };
 
     ($type_name:ident, $return_type:ty, $docs:expr) => {

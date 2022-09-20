@@ -30,21 +30,21 @@ macro_rules! numeric_operation {
             type SqlType = <Lhs::SqlType as sql_types::ops::$name>::Output;
         }
 
-        impl<Lhs, Rhs, DB> QueryFragment<DB> for $name<Lhs, Rhs>
-        where
-            DB: Backend,
-            Lhs: QueryFragment<DB>,
-            Rhs: QueryFragment<DB>,
-        {
-            fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
-                out.push_sql("(");
-                self.lhs.walk_ast(out.reborrow())?;
-                out.push_sql($op);
-                self.rhs.walk_ast(out.reborrow())?;
-                out.push_sql(")");
-                Ok(())
-            }
-        }
+        // impl<Lhs, Rhs, DB> QueryFragment<DB> for $name<Lhs, Rhs>
+        // where
+        //     DB: Backend,
+        //     Lhs: QueryFragment<DB>,
+        //     Rhs: QueryFragment<DB>,
+        // {
+        //     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+        //         out.push_sql("(");
+        //         self.lhs.walk_ast(out.reborrow())?;
+        //         out.push_sql($op);
+        //         self.rhs.walk_ast(out.reborrow())?;
+        //         out.push_sql(")");
+        //         Ok(())
+        //     }
+        // }
 
         impl_selectable_expression!($name<Lhs, Rhs>);
 

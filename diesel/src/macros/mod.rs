@@ -804,15 +804,15 @@ macro_rules! __diesel_table_impl {
                     type SqlType = ();
                 }
 
-                impl<DB: Backend> QueryFragment<DB> for star where
-                    <table as QuerySource>::FromClause: QueryFragment<DB>,
-                {
-                    fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
-                        table.from_clause().walk_ast(out.reborrow())?;
-                        out.push_sql(".*");
-                        Ok(())
-                    }
-                }
+                // impl<DB: Backend> QueryFragment<DB> for star where
+                //     <table as QuerySource>::FromClause: QueryFragment<DB>,
+                // {
+                //     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+                //         table.from_clause().walk_ast(out.reborrow())?;
+                //         out.push_sql(".*");
+                //         Ok(())
+                //     }
+                // }
 
                 impl SelectableExpression<table> for star {
                 }

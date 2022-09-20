@@ -78,89 +78,89 @@ impl SqlQuery {
     }
 }
 
-impl<DB> QueryFragment<DB> for SqlQuery
-where
-    DB: Backend,
-{
-    fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
-        out.unsafe_to_cache_prepared();
-        out.push_sql(&self.query);
-        Ok(())
-    }
-}
+// impl<DB> QueryFragment<DB> for SqlQuery
+// where
+//     DB: Backend,
+// {
+//     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+//         out.unsafe_to_cache_prepared();
+//         out.push_sql(&self.query);
+//         Ok(())
+//     }
+// }
 
-impl QueryId for SqlQuery {
-    type QueryId = ();
+// impl QueryId for SqlQuery {
+//     type QueryId = ();
 
-    const HAS_STATIC_QUERY_ID: bool = false;
-}
+//     const HAS_STATIC_QUERY_ID: bool = false;
+// }
 
-impl<Conn, T> LoadQuery<Conn, T> for SqlQuery
-where
-    Conn: Connection,
-    T: QueryableByName<Conn::Backend>,
-{
-    fn internal_load(self, conn: &Conn) -> QueryResult<Vec<T>> {
-        conn.query_by_name(&self)
-    }
-}
+// impl<Conn, T> LoadQuery<Conn, T> for SqlQuery
+// where
+//     Conn: Connection,
+//     T: QueryableByName<Conn::Backend>,
+// {
+//     fn internal_load(self, conn: &Conn) -> QueryResult<Vec<T>> {
+//         conn.query_by_name(&self)
+//     }
+// }
 
-impl<Conn> RunQueryDsl<Conn> for SqlQuery {}
+// impl<Conn> RunQueryDsl<Conn> for SqlQuery {}
 
-#[derive(Debug, Clone, Copy)]
-#[must_use = "Queries are only executed when calling `load`, `get_result` or similar."]
+// #[derive(Debug, Clone, Copy)]
+// #[must_use = "Queries are only executed when calling `load`, `get_result` or similar."]
 pub struct UncheckedBind<Query, Value, ST> {
     query: Query,
     value: Value,
     _marker: PhantomData<ST>,
 }
 
-impl<Query, Value, ST> UncheckedBind<Query, Value, ST> {
-    pub fn new(query: Query, value: Value) -> Self {
-        UncheckedBind {
-            query,
-            value,
-            _marker: PhantomData,
-        }
-    }
+// impl<Query, Value, ST> UncheckedBind<Query, Value, ST> {
+//     pub fn new(query: Query, value: Value) -> Self {
+//         UncheckedBind {
+//             query,
+//             value,
+//             _marker: PhantomData,
+//         }
+//     }
 
-    pub fn bind<ST2, Value2>(self, value: Value2) -> UncheckedBind<Self, Value2, ST2> {
-        UncheckedBind::new(self, value)
-    }
-}
+//     pub fn bind<ST2, Value2>(self, value: Value2) -> UncheckedBind<Self, Value2, ST2> {
+//         UncheckedBind::new(self, value)
+//     }
+// }
 
-impl<Query, Value, ST> QueryId for UncheckedBind<Query, Value, ST>
-where
-    Query: QueryId,
-    ST: QueryId,
-{
-    type QueryId = UncheckedBind<Query::QueryId, (), ST::QueryId>;
+// impl<Query, Value, ST> QueryId for UncheckedBind<Query, Value, ST>
+// where
+//     Query: QueryId,
+//     ST: QueryId,
+// {
+//     type QueryId = UncheckedBind<Query::QueryId, (), ST::QueryId>;
 
-    const HAS_STATIC_QUERY_ID: bool = Query::HAS_STATIC_QUERY_ID && ST::HAS_STATIC_QUERY_ID;
-}
+//     const HAS_STATIC_QUERY_ID: bool = Query::HAS_STATIC_QUERY_ID && ST::HAS_STATIC_QUERY_ID;
+// }
 
-impl<Query, Value, ST, DB> QueryFragment<DB> for UncheckedBind<Query, Value, ST>
-where
-    DB: Backend + HasSqlType<ST>,
-    Query: QueryFragment<DB>,
-    Value: ToSql<ST, DB>,
-{
-    fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
-        self.query.walk_ast(out.reborrow())?;
-        out.push_bind_param_value_only(&self.value)?;
-        Ok(())
-    }
-}
+// impl<Query, Value, ST, DB> QueryFragment<DB> for UncheckedBind<Query, Value, ST>
+// where
+//     DB: Backend + HasSqlType<ST>,
+//     Query: QueryFragment<DB>,
+//     Value: ToSql<ST, DB>,
+// {
+//     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+//         self.query.walk_ast(out.reborrow())?;
+//         out.push_bind_param_value_only(&self.value)?;
+//         Ok(())
+//     }
+// }
 
-impl<Conn, Query, Value, ST, T> LoadQuery<Conn, T> for UncheckedBind<Query, Value, ST>
-where
-    Conn: Connection,
-    T: QueryableByName<Conn::Backend>,
-    Self: QueryFragment<Conn::Backend> + QueryId,
-{
-    fn internal_load(self, conn: &Conn) -> QueryResult<Vec<T>> {
-        conn.query_by_name(&self)
-    }
-}
+// impl<Conn, Query, Value, ST, T> LoadQuery<Conn, T> for UncheckedBind<Query, Value, ST>
+// where
+//     Conn: Connection,
+//     T: QueryableByName<Conn::Backend>,
+//     Self: QueryFragment<Conn::Backend> + QueryId,
+// {
+//     fn internal_load(self, conn: &Conn) -> QueryResult<Vec<T>> {
+//         conn.query_by_name(&self)
+//     }
+// }
 
-impl<Conn, Query, Value, ST> RunQueryDsl<Conn> for UncheckedBind<Query, Value, ST> {}
+// impl<Conn, Query, Value, ST> RunQueryDsl<Conn> for UncheckedBind<Query, Value, ST> {}

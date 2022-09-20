@@ -116,105 +116,105 @@ where
     type SqlType = S::SelectClauseSqlType;
 }
 
-impl<F, S, D, W, O, L, Of, G, LC, DB> QueryFragment<DB>
-    for SelectStatement<F, S, D, W, O, L, Of, G, LC>
-where
-    DB: Backend,
-    S: SelectClauseQueryFragment<F, DB>,
-    F: QuerySource,
-    F::FromClause: QueryFragment<DB>,
-    D: QueryFragment<DB>,
-    W: QueryFragment<DB>,
-    O: QueryFragment<DB>,
-    L: QueryFragment<DB>,
-    Of: QueryFragment<DB>,
-    G: QueryFragment<DB>,
-    LC: QueryFragment<DB>,
-{
-    fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
-        out.push_sql("SELECT ");
-        self.distinct.walk_ast(out.reborrow())?;
-        self.select.walk_ast(&self.from, out.reborrow())?;
-        out.push_sql(" FROM ");
-        self.from.from_clause().walk_ast(out.reborrow())?;
-        self.where_clause.walk_ast(out.reborrow())?;
-        self.group_by.walk_ast(out.reborrow())?;
-        self.order.walk_ast(out.reborrow())?;
-        self.limit.walk_ast(out.reborrow())?;
-        self.offset.walk_ast(out.reborrow())?;
-        self.locking.walk_ast(out.reborrow())?;
-        Ok(())
-    }
-}
+// impl<F, S, D, W, O, L, Of, G, LC, DB> QueryFragment<DB>
+//     for SelectStatement<F, S, D, W, O, L, Of, G, LC>
+// where
+//     DB: Backend,
+//     S: SelectClauseQueryFragment<F, DB>,
+//     F: QuerySource,
+//     F::FromClause: QueryFragment<DB>,
+//     D: QueryFragment<DB>,
+//     W: QueryFragment<DB>,
+//     O: QueryFragment<DB>,
+//     L: QueryFragment<DB>,
+//     Of: QueryFragment<DB>,
+//     G: QueryFragment<DB>,
+//     LC: QueryFragment<DB>,
+// {
+//     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+//         out.push_sql("SELECT ");
+//         self.distinct.walk_ast(out.reborrow())?;
+//         self.select.walk_ast(&self.from, out.reborrow())?;
+//         out.push_sql(" FROM ");
+//         self.from.from_clause().walk_ast(out.reborrow())?;
+//         self.where_clause.walk_ast(out.reborrow())?;
+//         self.group_by.walk_ast(out.reborrow())?;
+//         self.order.walk_ast(out.reborrow())?;
+//         self.limit.walk_ast(out.reborrow())?;
+//         self.offset.walk_ast(out.reborrow())?;
+//         self.locking.walk_ast(out.reborrow())?;
+//         Ok(())
+//     }
+// }
 
-impl<S, D, W, O, L, Of, G, LC, DB> QueryFragment<DB>
-    for SelectStatement<(), S, D, W, O, L, Of, G, LC>
-where
-    DB: Backend,
-    S: SelectClauseQueryFragment<(), DB>,
-    D: QueryFragment<DB>,
-    W: QueryFragment<DB>,
-    O: QueryFragment<DB>,
-    L: QueryFragment<DB>,
-    Of: QueryFragment<DB>,
-    G: QueryFragment<DB>,
-    LC: QueryFragment<DB>,
-{
-    fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
-        out.push_sql("SELECT ");
-        self.distinct.walk_ast(out.reborrow())?;
-        self.select.walk_ast(&(), out.reborrow())?;
-        self.where_clause.walk_ast(out.reborrow())?;
-        self.group_by.walk_ast(out.reborrow())?;
-        self.order.walk_ast(out.reborrow())?;
-        self.limit.walk_ast(out.reborrow())?;
-        self.offset.walk_ast(out.reborrow())?;
-        self.locking.walk_ast(out.reborrow())?;
-        Ok(())
-    }
-}
+// impl<S, D, W, O, L, Of, G, LC, DB> QueryFragment<DB>
+//     for SelectStatement<(), S, D, W, O, L, Of, G, LC>
+// where
+//     DB: Backend,
+//     S: SelectClauseQueryFragment<(), DB>,
+//     D: QueryFragment<DB>,
+//     W: QueryFragment<DB>,
+//     O: QueryFragment<DB>,
+//     L: QueryFragment<DB>,
+//     Of: QueryFragment<DB>,
+//     G: QueryFragment<DB>,
+//     LC: QueryFragment<DB>,
+// {
+//     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+//         out.push_sql("SELECT ");
+//         self.distinct.walk_ast(out.reborrow())?;
+//         self.select.walk_ast(&(), out.reborrow())?;
+//         self.where_clause.walk_ast(out.reborrow())?;
+//         self.group_by.walk_ast(out.reborrow())?;
+//         self.order.walk_ast(out.reborrow())?;
+//         self.limit.walk_ast(out.reborrow())?;
+//         self.offset.walk_ast(out.reborrow())?;
+//         self.locking.walk_ast(out.reborrow())?;
+//         Ok(())
+//     }
+// }
 
-impl<S, F, D, W, O, L, Of, G, LC, QS> ValidSubselect<QS>
-    for SelectStatement<F, S, D, W, O, L, Of, LC, G>
-where
-    Self: SelectQuery,
-    W: ValidWhereClause<Join<F, QS, Inner>>,
-{
-}
+// impl<S, F, D, W, O, L, Of, G, LC, QS> ValidSubselect<QS>
+//     for SelectStatement<F, S, D, W, O, L, Of, LC, G>
+// where
+//     Self: SelectQuery,
+//     W: ValidWhereClause<Join<F, QS, Inner>>,
+// {
+// }
 
-/// Allow `SelectStatement<From>` to act as if it were `From` as long as
-/// no other query methods have been called on it
-impl<From, T> AppearsInFromClause<T> for SelectStatement<From>
-where
-    From: AppearsInFromClause<T>,
-{
-    type Count = From::Count;
-}
+// /// Allow `SelectStatement<From>` to act as if it were `From` as long as
+// /// no other query methods have been called on it
+// impl<From, T> AppearsInFromClause<T> for SelectStatement<From>
+// where
+//     From: AppearsInFromClause<T>,
+// {
+//     type Count = From::Count;
+// }
 
-impl<From> QuerySource for SelectStatement<From>
-where
-    From: QuerySource,
-    From::DefaultSelection: SelectableExpression<Self>,
-{
-    type FromClause = From::FromClause;
-    type DefaultSelection = From::DefaultSelection;
+// impl<From> QuerySource for SelectStatement<From>
+// where
+//     From: QuerySource,
+//     From::DefaultSelection: SelectableExpression<Self>,
+// {
+//     type FromClause = From::FromClause;
+//     type DefaultSelection = From::DefaultSelection;
 
-    fn from_clause(&self) -> Self::FromClause {
-        self.from.from_clause()
-    }
+//     fn from_clause(&self) -> Self::FromClause {
+//         self.from.from_clause()
+//     }
 
-    fn default_selection(&self) -> Self::DefaultSelection {
-        self.from.default_selection()
-    }
-}
+//     fn default_selection(&self) -> Self::DefaultSelection {
+//         self.from.default_selection()
+//     }
+// }
 
-impl<From, Selection> AppendSelection<Selection> for SelectStatement<From>
-where
-    From: AppendSelection<Selection>,
-{
-    type Output = From::Output;
+// impl<From, Selection> AppendSelection<Selection> for SelectStatement<From>
+// where
+//     From: AppendSelection<Selection>,
+// {
+//     type Output = From::Output;
 
-    fn append_selection(&self, selection: Selection) -> Self::Output {
-        self.from.append_selection(selection)
-    }
-}
+//     fn append_selection(&self, selection: Selection) -> Self::Output {
+//         self.from.append_selection(selection)
+//     }
+// }

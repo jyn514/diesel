@@ -173,34 +173,34 @@ impl<T, U, C, Op, Ret> InsertStatement<T, InsertFromSelect<U, C>, Op, Ret> {
     }
 }
 
-impl<T, U, Op, Ret, DB> QueryFragment<DB> for InsertStatement<T, U, Op, Ret>
-where
-    DB: Backend,
-    T: Table,
-    T::FromClause: QueryFragment<DB>,
-    U: QueryFragment<DB> + CanInsertInSingleQuery<DB>,
-    Op: QueryFragment<DB>,
-    Ret: QueryFragment<DB>,
-{
-    fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
-        out.unsafe_to_cache_prepared();
+// impl<T, U, Op, Ret, DB> QueryFragment<DB> for InsertStatement<T, U, Op, Ret>
+// where
+//     DB: Backend,
+//     T: Table,
+//     T::FromClause: QueryFragment<DB>,
+//     U: QueryFragment<DB> + CanInsertInSingleQuery<DB>,
+//     Op: QueryFragment<DB>,
+//     Ret: QueryFragment<DB>,
+// {
+//     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+//         out.unsafe_to_cache_prepared();
 
-        if self.records.rows_to_insert() == Some(0) {
-            out.push_sql("SELECT 1 FROM ");
-            self.target.from_clause().walk_ast(out.reborrow())?;
-            out.push_sql(" WHERE 1=0");
-            return Ok(());
-        }
+//         if self.records.rows_to_insert() == Some(0) {
+//             out.push_sql("SELECT 1 FROM ");
+//             self.target.from_clause().walk_ast(out.reborrow())?;
+//             out.push_sql(" WHERE 1=0");
+//             return Ok(());
+//         }
 
-        self.operator.walk_ast(out.reborrow())?;
-        out.push_sql(" INTO ");
-        self.target.from_clause().walk_ast(out.reborrow())?;
-        out.push_sql(" ");
-        self.records.walk_ast(out.reborrow())?;
-        self.returning.walk_ast(out.reborrow())?;
-        Ok(())
-    }
-}
+//         self.operator.walk_ast(out.reborrow())?;
+//         out.push_sql(" INTO ");
+//         self.target.from_clause().walk_ast(out.reborrow())?;
+//         out.push_sql(" ");
+//         self.records.walk_ast(out.reborrow())?;
+//         self.returning.walk_ast(out.reborrow())?;
+//         Ok(())
+//     }
+// }
 
 #[cfg(feature = "sqlite")]
 impl<'a, T, U, Op> ExecuteDsl<SqliteConnection> for InsertStatement<T, &'a [U], Op>
@@ -228,43 +228,43 @@ where
     }
 }
 
-#[cfg(feature = "sqlite")]
-impl<'a, T, U, Op> ExecuteDsl<SqliteConnection> for InsertStatement<T, BatchInsert<'a, U, T>, Op>
-where
-    InsertStatement<T, &'a [U], Op>: ExecuteDsl<SqliteConnection>,
-{
-    fn execute(query: Self, conn: &SqliteConnection) -> QueryResult<usize> {
-        InsertStatement::new(
-            query.target,
-            query.records.records,
-            query.operator,
-            query.returning,
-        )
-        .execute(conn)
-    }
-}
+// #[cfg(feature = "sqlite")]
+// impl<'a, T, U, Op> ExecuteDsl<SqliteConnection> for InsertStatement<T, BatchInsert<'a, U, T>, Op>
+// where
+//     InsertStatement<T, &'a [U], Op>: ExecuteDsl<SqliteConnection>,
+// {
+//     fn execute(query: Self, conn: &SqliteConnection) -> QueryResult<usize> {
+//         InsertStatement::new(
+//             query.target,
+//             query.records.records,
+//             query.operator,
+//             query.returning,
+//         )
+//         .execute(conn)
+//     }
+// }
 
-#[cfg(feature = "sqlite")]
-impl<T, U, Op> ExecuteDsl<SqliteConnection>
-    for InsertStatement<T, OwnedBatchInsert<ValuesClause<U, T>, T>, Op>
-where
-    InsertStatement<T, ValuesClause<U, T>, Op>: QueryFragment<Sqlite>,
-    T: Copy,
-    Op: Copy,
-{
-    fn execute(query: Self, conn: &SqliteConnection) -> QueryResult<usize> {
-        use connection::Connection;
-        conn.transaction(|| {
-            let mut result = 0;
-            for value in query.records.values {
-                result +=
-                    InsertStatement::new(query.target, value, query.operator, query.returning)
-                        .execute(conn)?;
-            }
-            Ok(result)
-        })
-    }
-}
+// #[cfg(feature = "sqlite")]
+// impl<T, U, Op> ExecuteDsl<SqliteConnection>
+//     for InsertStatement<T, OwnedBatchInsert<ValuesClause<U, T>, T>, Op>
+// where
+//     InsertStatement<T, ValuesClause<U, T>, Op>: QueryFragment<Sqlite>,
+//     T: Copy,
+//     Op: Copy,
+// {
+//     fn execute(query: Self, conn: &SqliteConnection) -> QueryResult<usize> {
+//         use connection::Connection;
+//         conn.transaction(|| {
+//             let mut result = 0;
+//             for value in query.records.values {
+//                 result +=
+//                     InsertStatement::new(query.target, value, query.operator, query.returning)
+//                         .execute(conn)?;
+//             }
+//             Ok(result)
+//         })
+//     }
+// }
 
 impl<T, U, Op, Ret> QueryId for InsertStatement<T, U, Op, Ret> {
     type QueryId = ();
@@ -334,12 +334,12 @@ impl<T, U, Op> InsertStatement<T, U, Op> {
 #[doc(hidden)]
 pub struct Insert;
 
-impl<DB: Backend> QueryFragment<DB> for Insert {
-    fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
-        out.push_sql("INSERT");
-        Ok(())
-    }
-}
+// impl<DB: Backend> QueryFragment<DB> for Insert {
+//     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+//         out.push_sql("INSERT");
+//         Ok(())
+//     }
+// }
 
 #[derive(Debug, Copy, Clone, QueryId)]
 #[doc(hidden)]
@@ -440,27 +440,27 @@ impl<'a, Tab> Insertable<Tab> for &'a DefaultValues {
     }
 }
 
-impl<DB> QueryFragment<DB> for DefaultValues
-where
-    DB: Backend + Any,
-{
-    #[cfg(feature = "mysql")]
-    fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
-        // This can be less hacky once stabilization lands
-        if TypeId::of::<DB>() == TypeId::of::<::mysql::Mysql>() {
-            out.push_sql("() VALUES ()");
-        } else {
-            out.push_sql("DEFAULT VALUES");
-        }
-        Ok(())
-    }
+// impl<DB> QueryFragment<DB> for DefaultValues
+// where
+//     DB: Backend + Any,
+// {
+//     #[cfg(feature = "mysql")]
+//     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+//         // This can be less hacky once stabilization lands
+//         if TypeId::of::<DB>() == TypeId::of::<::mysql::Mysql>() {
+//             out.push_sql("() VALUES ()");
+//         } else {
+//             out.push_sql("DEFAULT VALUES");
+//         }
+//         Ok(())
+//     }
 
-    #[cfg(not(feature = "mysql"))]
-    fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
-        out.push_sql("DEFAULT VALUES");
-        Ok(())
-    }
-}
+//     #[cfg(not(feature = "mysql"))]
+//     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+//         out.push_sql("DEFAULT VALUES");
+//         Ok(())
+//     }
+// }
 
 #[doc(hidden)]
 #[derive(Debug, Clone, Copy)]

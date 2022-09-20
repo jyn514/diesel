@@ -26,14 +26,14 @@ impl<LockMode, Modifier> LockingClause<LockMode, Modifier> {
     }
 }
 
-impl<DB: Backend, L: QueryFragment<DB>, M: QueryFragment<DB>> QueryFragment<DB>
-    for LockingClause<L, M>
-{
-    fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
-        self.lock_mode.walk_ast(out.reborrow())?;
-        self.modifier.walk_ast(out.reborrow())
-    }
-}
+// impl<DB: Backend, L: QueryFragment<DB>, M: QueryFragment<DB>> QueryFragment<DB>
+//     for LockingClause<L, M>
+// {
+//     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+//         self.lock_mode.walk_ast(out.reborrow())?;
+//         self.modifier.walk_ast(out.reborrow())
+//     }
+// }
 
 // `LockMode` parameters
 // All the different types of row locks that can be acquired.

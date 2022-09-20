@@ -88,22 +88,22 @@ macro_rules! tuple_impls {
                 type SqlType = ($(<$T as Expression>::SqlType,)+);
             }
 
-            impl<$($T: QueryFragment<__DB>),+, __DB: Backend> QueryFragment<__DB> for ($($T,)+) {
-                #[allow(unused_assignments)]
-                fn walk_ast(&self, mut out: AstPass<__DB>) -> QueryResult<()> {
-                    let mut needs_comma = false;
-                    $(
-                        if !self.$idx.is_noop()? {
-                            if needs_comma {
-                                out.push_sql(", ");
-                            }
-                            self.$idx.walk_ast(out.reborrow())?;
-                            needs_comma = true;
-                        }
-                    )+
-                    Ok(())
-                }
-            }
+            // impl<$($T: QueryFragment<__DB>),+, __DB: Backend> QueryFragment<__DB> for ($($T,)+) {
+            //     #[allow(unused_assignments)]
+            //     fn walk_ast(&self, mut out: AstPass<__DB>) -> QueryResult<()> {
+            //         let mut needs_comma = false;
+            //         $(
+            //             if !self.$idx.is_noop()? {
+            //                 if needs_comma {
+            //                     out.push_sql(", ");
+            //                 }
+            //                 self.$idx.walk_ast(out.reborrow())?;
+            //                 needs_comma = true;
+            //             }
+            //         )+
+            //         Ok(())
+            //     }
+            // }
 
             impl<$($T,)+ Tab> ColumnList for ($($T,)+)
             where

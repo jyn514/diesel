@@ -5,11 +5,11 @@ use result::QueryResult;
 #[derive(Debug, Copy, Clone)]
 pub struct Identifier<'a>(pub &'a str);
 
-impl<'a, DB: Backend> QueryFragment<DB> for Identifier<'a> {
-    fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
-        out.push_identifier(self.0)
-    }
-}
+// impl<'a, DB: Backend> QueryFragment<DB> for Identifier<'a> {
+//     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+//         out.push_identifier(self.0)
+//     }
+// }
 
 #[derive(Debug, Copy, Clone)]
 pub struct InfixNode<'a, T, U> {
@@ -28,16 +28,16 @@ impl<'a, T, U> InfixNode<'a, T, U> {
     }
 }
 
-impl<'a, T, U, DB> QueryFragment<DB> for InfixNode<'a, T, U>
-where
-    DB: Backend,
-    T: QueryFragment<DB>,
-    U: QueryFragment<DB>,
-{
-    fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
-        self.lhs.walk_ast(out.reborrow())?;
-        out.push_sql(self.middle);
-        self.rhs.walk_ast(out.reborrow())?;
-        Ok(())
-    }
-}
+// impl<'a, T, U, DB> QueryFragment<DB> for InfixNode<'a, T, U>
+// where
+//     DB: Backend,
+//     T: QueryFragment<DB>,
+//     U: QueryFragment<DB>,
+// {
+//     fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+//         self.lhs.walk_ast(out.reborrow())?;
+//         out.push_sql(self.middle);
+//         self.rhs.walk_ast(out.reborrow())?;
+//         Ok(())
+//     }
+// }

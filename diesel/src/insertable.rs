@@ -21,13 +21,15 @@ pub struct InsertStatement<T, U, Op = (), Ret = ()> {
 }
 
 pub struct ValuesClause{}
+use crate::backend::Backend;
+
 pub use self::reproduce::{AstPass, QueryResult};
 
     // pub struct AstPass<'a, DB>
     // {
     // }
 
-pub trait QueryFragment<DB> {
+pub trait QueryFragment<DB: Backend> {
     fn walk_ast(&self, pass: AstPass<DB>) -> QueryResult<()>;
 }
 
@@ -65,13 +67,13 @@ mod reproduce {
     }
 
     pub struct BatchInsert {}
+    struct Foo{}
 
-    impl<'a, T> QueryFragment<()> for BatchInsert
+    impl<'a, T> QueryFragment<Foo> for BatchInsert
     where
-        &'a T: Insertable<Values = ()>,
-        // &'a T: Insertable,
+        &'a T: Insertable<Values = Foo>,
     {
-        fn walk_ast(&self, mut out: AstPass<()>) -> QueryResult<()> {
+        fn walk_ast(&self, mut out: AstPass<Foo>) -> QueryResult<()> {
         }
     }
 
