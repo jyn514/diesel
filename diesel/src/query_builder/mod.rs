@@ -124,114 +124,50 @@ pub trait SelectQuery {
     type SqlType;
 }
 
-/// An untyped fragment of SQL.
-///
-/// This may be a complete SQL command (such as an update statement without a
-/// `RETURNING` clause), or a subsection (such as our internal types used to
-/// represent a `WHERE` clause). Implementations of [`ExecuteDsl`] and
-/// [`LoadQuery`] will generally require that this trait be implemented.
-///
-/// [`ExecuteDsl`]: ../query_dsl/methods/trait.ExecuteDsl.html
-/// [`LoadQuery`]: ../query_dsl/methods/trait.LoadQuery.html
-pub trait QueryFragment<DB: Backend> {
-    /// Walk over this `QueryFragment` for all passes.
-    ///
-    /// This method is where the actual behavior of an AST node is implemented.
-    /// This method will contain the behavior required for all possible AST
-    /// passes. See [`AstPass`] for more details.
-    ///
-    /// [`AstPass`]: struct.AstPass.html
-    fn walk_ast(&self, pass: AstPass<DB>) -> QueryResult<()>;
+pub use crate::insertable::QueryFragment;
 
-    /// Converts this `QueryFragment` to its SQL representation.
-    ///
-    /// This method should only be called by implementations of `Connection`.
-    // fn to_sql(&self, out: &mut DB::QueryBuilder) -> QueryResult<()> {
-    //     self.walk_ast(AstPass::to_sql(out))
-    // }
+// pub trait QueryFragment<DB: Backend> {
+//     fn walk_ast(&self, pass: AstPass<DB>) -> QueryResult<()>;
+// }
 
-    /// Serializes all bind parameters in this query.
-    ///
-    /// A bind parameter is a value which is sent separately from the query
-    /// itself. It is represented in SQL with a placeholder such as `?` or `$1`.
-    ///
-    /// This method should only be called by implementations of `Connection`.
-    // fn collect_binds(
-    //     &self,
-    //     out: &mut DB::BindCollector,
-    //     metadata_lookup: &DB::MetadataLookup,
-    // ) -> QueryResult<()> {
-    //     self.walk_ast(AstPass::collect_binds(out, metadata_lookup))
-    // }
+// impl<T: ?Sized, DB> QueryFragment<DB> for Box<T>
+// where
+//     DB: Backend,
+//     T: QueryFragment<DB>,
+// {
+//     fn walk_ast(&self, pass: AstPass<DB>) -> QueryResult<()> {
+//         QueryFragment::walk_ast(&**self, pass)
+//     }
+// }
 
-    /// Is this query safe to store in the prepared statement cache?
-    ///
-    /// In order to keep our prepared statement cache at a reasonable size, we
-    /// avoid caching any queries which represent a potentially unbounded number
-    /// of SQL queries. Generally this will only return `true` for queries for
-    /// which `to_sql` will always construct exactly identical SQL.
-    ///
-    /// Some examples of where this method will return `false` are:
-    ///
-    /// - `SqlLiteral` (We don't know if the SQL was constructed dynamically, so
-    ///   we must assume that it was)
-    /// - `In` and `NotIn` (Each value requires a separate bind param
-    ///   placeholder)
-    ///
-    /// This method should only be called by implementations of `Connection`.
-    // fn is_safe_to_cache_prepared(&self) -> QueryResult<bool> {
-    //     let mut result = true;
-    //     self.walk_ast(AstPass::is_safe_to_cache_prepared(&mut result))?;
-    //     Ok(result)
-    // }
+// impl<'a, T: ?Sized, DB> QueryFragment<DB> for &'a T
+// where
+//     DB: Backend,
+//     T: QueryFragment<DB>,
+// {
+//     fn walk_ast(&self, pass: AstPass<DB>) -> QueryResult<()> {
+//         QueryFragment::walk_ast(&**self, pass)
+//     }
+// }
 
-    // #[doc(hidden)]
-    /// Does walking this AST have any effect?
-    fn is_noop(&self) -> QueryResult<bool> {
-        // let mut result = true;
-        // self.walk_ast(AstPass::is_noop(&mut result))?;
-        // Ok(result)
-    }
-}
+// impl<DB: Backend> QueryFragment<DB> for () {
+//     fn walk_ast(&self, _: AstPass<DB>) -> QueryResult<()> {
+//         Ok(())
+//     }
+// }
 
-impl<T: ?Sized, DB> QueryFragment<DB> for Box<T>
-where
-    DB: Backend,
-    T: QueryFragment<DB>,
-{
-    fn walk_ast(&self, pass: AstPass<DB>) -> QueryResult<()> {
-        QueryFragment::walk_ast(&**self, pass)
-    }
-}
-
-impl<'a, T: ?Sized, DB> QueryFragment<DB> for &'a T
-where
-    DB: Backend,
-    T: QueryFragment<DB>,
-{
-    fn walk_ast(&self, pass: AstPass<DB>) -> QueryResult<()> {
-        QueryFragment::walk_ast(&**self, pass)
-    }
-}
-
-impl<DB: Backend> QueryFragment<DB> for () {
-    fn walk_ast(&self, _: AstPass<DB>) -> QueryResult<()> {
-        Ok(())
-    }
-}
-
-impl<T, DB> QueryFragment<DB> for Option<T>
-where
-    DB: Backend,
-    T: QueryFragment<DB>,
-{
-    fn walk_ast(&self, out: AstPass<DB>) -> QueryResult<()> {
-        match *self {
-            Some(ref c) => c.walk_ast(out),
-            None => Ok(()),
-        }
-    }
-}
+// impl<T, DB> QueryFragment<DB> for Option<T>
+// where
+//     DB: Backend,
+//     T: QueryFragment<DB>,
+// {
+//     fn walk_ast(&self, out: AstPass<DB>) -> QueryResult<()> {
+//         match *self {
+//             Some(ref c) => c.walk_ast(out),
+//             None => Ok(()),
+//         }
+//     }
+// }
 
 /// Types that can be converted into a complete, typed SQL query.
 ///
