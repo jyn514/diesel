@@ -202,7 +202,8 @@ pub enum ConnectionError {
 /// This type is exported by `diesel::prelude`, and is generally used by any
 /// code which is interacting with Diesel. This type exists to avoid writing out
 /// `diesel::result::Error`, and is otherwise a direct mapping to `Result`.
-pub type QueryResult<T> = Result<T, Error>;
+// pub type QueryResult<T> = Result<T, Error>;
+pub use crate::insertable::QueryResult;
 
 /// A specialized result type for establishing connections.
 ///

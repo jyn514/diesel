@@ -1,9 +1,5 @@
-use query_builder::{
-    // AstPass, InsertStatement, QueryFragment, ValuesClause,
-};
-use result::QueryResult;
+// use result::QueryResult;
 
-use backend::Backend;
 pub trait Insertable<T> {
     type Values;
 
@@ -23,11 +19,13 @@ pub struct InsertStatement<T, U, Op = (), Ret = ()> {
     records: U,
     returning: Ret,
 }
-// pub enum Error {}
-// type QueryResult<T> = Result<T, Error>;
 
 pub struct ValuesClause{}
-pub use self::reproduce::{AstPass};
+pub use self::reproduce::{AstPass, QueryResult};
+
+    // pub struct AstPass<'a, DB>
+    // {
+    // }
 
 pub trait QueryFragment<DB> {
     fn walk_ast(&self, pass: AstPass<DB>) -> QueryResult<()>;
@@ -35,20 +33,20 @@ pub trait QueryFragment<DB> {
 
 
 mod reproduce {
-    // use super::{QueryFragment, QueryResult, ValuesClause, AstPass};
-    // use super::{QueryFragment, QueryResult, ValuesClause, Backend};
-    use super::{QueryResult, QueryFragment, Backend};
+    use super::{QueryFragment};
 
-    // pub struct ValuesClause<T, Tab> {
+    pub type QueryResult<T> = Result<T, ()>;
+// pub trait QueryFragment<DB> {
+//     fn walk_ast(&self, pass: AstPass<DB>) -> QueryResult<()>;
+// }
 
-    pub struct AstPass<'a, DB>
+
+    pub struct AstPass<DB>
     {
     }
 
     trait Insertable {
         type Values;
-
-        fn values(self) -> Self::Values;
     }
 
     impl<T> Insertable for Option<T>
@@ -57,9 +55,6 @@ mod reproduce {
         T::Values: Default,
     {
         type Values = T::Values;
-
-        fn values(self) -> Self::Values {
-        }
     }
 
     impl<'a, T> Insertable for &'a Option<T>
@@ -67,19 +62,16 @@ mod reproduce {
         Option<&'a T>: Insertable,
     {
         type Values = <Option<&'a T> as Insertable>::Values;
-
-        fn values(self) -> Self::Values {
-        }
     }
 
-    pub struct BatchInsert {
-    }
+    pub struct BatchInsert {}
 
-    impl<'a, T, DB> QueryFragment<DB> for BatchInsert
+    impl<'a, T> QueryFragment<()> for BatchInsert
     where
         &'a T: Insertable<Values = ()>,
+        // &'a T: Insertable,
     {
-        fn walk_ast(&self, mut out: AstPass<DB>) -> QueryResult<()> {
+        fn walk_ast(&self, mut out: AstPass<()>) -> QueryResult<()> {
         }
     }
 
