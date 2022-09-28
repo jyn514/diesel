@@ -13,14 +13,11 @@ pub trait Insertable<T> {
 }
 
 pub struct NoReturningClause;
-pub struct InsertStatement<T, U, Op = (), Ret = ()> {
-    operator: Op,
-    target: T,
-    records: U,
-    returning: Ret,
+pub struct InsertStatement<T, U, Op = i32, Ret = i32> {
 }
 
 pub struct ValuesClause{}
+
 use crate::backend::Backend;
 
 pub use self::reproduce::{AstPass, QueryResult};

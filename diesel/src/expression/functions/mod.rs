@@ -233,7 +233,7 @@ macro_rules! __diesel_sql_function_body {
                 $crate::expression::Expression
                 for $fn_name<$($type_args,)* $($arg_name),*>
             where
-                ($($arg_name),*): $crate::expression::Expression,
+                $($arg_name),*: $crate::expression::Expression,
             {
                 type SqlType = $return_type;
             }
@@ -243,7 +243,7 @@ macro_rules! __diesel_sql_function_body {
                 for $fn_name<$($type_args,)* $($arg_name),*>
             where
                 DB: $crate::backend::Backend,
-                for<'a> ($(&'a $arg_name),*): $crate::query_builder::QueryFragment,
+                for<'a> $(&'a $arg_name),*: $crate::query_builder::QueryFragment,
             {
                 fn walk_ast(&self, mut out: $crate::query_builder::AstPass) -> $crate::result::QueryResult {
                     out.push_sql(concat!($sql_name, "("));

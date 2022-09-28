@@ -133,7 +133,7 @@ fn execute_statement(stmt: &mut Statement, binds: &mut Binds) -> QueryResult {
     Ok(())
 }
 
-fn populate_row_buffers(stmt: &Statement, binds: &mut Binds) -> QueryResult> {
+fn populate_row_buffers(stmt: &Statement, binds: &mut Binds) -> QueryResult {
     let next_row_result = unsafe { ffi::mysql_stmt_fetch(stmt.stmt.as_ptr()) };
     match next_row_result as libc::c_uint {
         ffi::MYSQL_NO_DATA => Ok(None),

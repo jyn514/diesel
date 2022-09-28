@@ -29,64 +29,64 @@ macro_rules! tuple_impls {
         }
     )+) => {
         $(
-            impl<$($T),+, __DB> HasSqlType<($($T,)+)> for __DB where
-                $(__DB: HasSqlType<$T>),+,
-                __DB: Backend,
-            {
-                fn metadata(_: &__DB::MetadataLookup) -> __DB::TypeMetadata {
-                    unreachable!("Tuples should never implement `ToSql` directly");
-                }
+            // impl<$($T),+, __DB> HasSqlType<($($T,)+)> for __DB where
+            //     $(__DB: HasSqlType<$T>),+,
+            //     __DB: Backend,
+            // {
+            //     fn metadata(_: &__DB::MetadataLookup) -> __DB::TypeMetadata {
+            //         unreachable!("Tuples should never implement `ToSql` directly");
+            //     }
 
-                #[cfg(feature = "with-deprecated")]
-                #[allow(deprecated)]
-                fn row_metadata(out: &mut Vec<__DB::TypeMetadata>, lookup: &__DB::MetadataLookup) {
-                    $(<__DB as HasSqlType<$T>>::row_metadata(out, lookup);)+
-                }
+            //     #[cfg(feature = "with-deprecated")]
+            //     #[allow(deprecated)]
+            //     fn row_metadata(out: &mut Vec<__DB::TypeMetadata>, lookup: &__DB::MetadataLookup) {
+            //         $(<__DB as HasSqlType<$T>>::row_metadata(out, lookup);)+
+            //     }
 
-                #[cfg(feature = "mysql")]
-                fn mysql_row_metadata(out: &mut Vec<(__DB::TypeMetadata, IsSigned)>, lookup: &__DB::MetadataLookup) {
-                    $(<__DB as HasSqlType<$T>>::mysql_row_metadata(out, lookup);)+
-                }
-            }
+            //     #[cfg(feature = "mysql")]
+            //     fn mysql_row_metadata(out: &mut Vec<(__DB::TypeMetadata, IsSigned)>, lookup: &__DB::MetadataLookup) {
+            //         $(<__DB as HasSqlType<$T>>::mysql_row_metadata(out, lookup);)+
+            //     }
+            // }
 
-            impl<$($T),+> NotNull for ($($T,)+) {
-            }
+            // impl<$($T),+> NotNull for ($($T,)+) {
+            // }
 
-            impl<$($T),+, $($ST),+, __DB> FromSqlRow<($($ST,)+), __DB> for ($($T,)+) where
-                __DB: Backend,
-                $($T: FromSqlRow<$ST, __DB>),+,
-            {
-                const FIELDS_NEEDED: usize = $($T::FIELDS_NEEDED +)+ 0;
+            // impl<$($T),+, $($ST),+, __DB> FromSqlRow<($($ST,)+), __DB> for ($($T,)+) where
+            //     __DB: Backend,
+            //     $($T: FromSqlRow<$ST, __DB>),+,
+            // {
+            //     const FIELDS_NEEDED: usize = $($T::FIELDS_NEEDED +)+ 0;
 
-                fn build_from_row<RowT: Row<__DB>>(row: &mut RowT) -> Result<Self, Box<dyn Error + Send + Sync>> {
-                    Ok(($($T::build_from_row(row)?,)+))
-                }
-            }
+            //     fn build_from_row<RowT: Row<__DB>>(row: &mut RowT) -> Result<Self, Box<dyn Error + Send + Sync>> {
+            //         Ok(($($T::build_from_row(row)?,)+))
+            //     }
+            // }
 
-            impl<$($T),+, $($ST),+, __DB> Queryable<($($ST,)+), __DB> for ($($T,)+) where
-                __DB: Backend,
-                $($T: Queryable<$ST, __DB>),+,
-            {
-                type Row = ($($T::Row,)+);
+            // impl<$($T),+, $($ST),+, __DB> Queryable<($($ST,)+), __DB> for ($($T,)+) where
+            //     __DB: Backend,
+            //     $($T: Queryable<$ST, __DB>),+,
+            // {
+            //     type Row = ($($T::Row,)+);
 
-                fn build(row: Self::Row) -> Self {
-                    ($($T::build(row.$idx),)+)
-                }
-            }
+            //     fn build(row: Self::Row) -> Self {
+            //         ($($T::build(row.$idx),)+)
+            //     }
+            // }
 
-            impl<$($T,)+ __DB> QueryableByName<__DB> for ($($T,)+)
-            where
-                __DB: Backend,
-                $($T: QueryableByName<__DB>,)+
-            {
-                fn build<RowT: NamedRow<__DB>>(row: &RowT) -> deserialize::Result<Self> {
-                    Ok(($($T::build(row)?,)+))
-                }
-            }
+            // impl<$($T,)+ __DB> QueryableByName<__DB> for ($($T,)+)
+            // where
+            //     __DB: Backend,
+            //     $($T: QueryableByName<__DB>,)+
+            // {
+            //     fn build<RowT: NamedRow<__DB>>(row: &RowT) -> deserialize::Result<Self> {
+            //         Ok(($($T::build(row)?,)+))
+            //     }
+            // }
 
-            impl<$($T: Expression + NonAggregate),+> Expression for ($($T,)+) {
-                type SqlType = ($(<$T as Expression>::SqlType,)+);
-            }
+            // impl<$($T: Expression + NonAggregate),+> Expression for ($($T,)+) {
+            //     type SqlType = ($(<$T as Expression>::SqlType,)+);
+            // }
 
             // impl<$($T: QueryFragment),+, __DB: Backend> QueryFragment for ($($T,)+) {
             //     #[allow(unused_assignments)]

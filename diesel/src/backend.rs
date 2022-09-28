@@ -20,18 +20,19 @@ use sql_types::{self, HasSqlType};
 /// protocol used to communicated with the database.
 pub trait Backend
 where
-    Self: Sized,
-    Self: HasSqlType<sql_types::SmallInt>,
-    Self: HasSqlType<sql_types::Integer>,
-    Self: HasSqlType<sql_types::BigInt>,
-    Self: HasSqlType<sql_types::Float>,
-    Self: HasSqlType<sql_types::Double>,
-    Self: HasSqlType<sql_types::VarChar>,
-    Self: HasSqlType<sql_types::Text>,
-    Self: HasSqlType<sql_types::Binary>,
-    Self: HasSqlType<sql_types::Date>,
-    Self: HasSqlType<sql_types::Time>,
-    Self: HasSqlType<sql_types::Timestamp>,
+    // Self: Sized,
+    Self: sql_types::TypeMetadata
+    // Self: HasSqlType<sql_types::SmallInt>,
+    // Self: HasSqlType<sql_types::Integer>,
+    // Self: HasSqlType<sql_types::BigInt>,
+    // Self: HasSqlType<sql_types::Float>,
+    // Self: HasSqlType<sql_types::Double>,
+    // Self: HasSqlType<sql_types::VarChar>,
+    // Self: HasSqlType<sql_types::Text>,
+    // Self: HasSqlType<sql_types::Binary>,
+    // Self: HasSqlType<sql_types::Date>,
+    // Self: HasSqlType<sql_types::Time>,
+    // Self: HasSqlType<sql_types::Timestamp>,
 {
     /// The concrete `QueryBuilder` implementation for this backend.
     type QueryBuilder: QueryBuilder<Self>;
